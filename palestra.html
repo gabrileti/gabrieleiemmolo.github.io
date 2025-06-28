@@ -487,7 +487,7 @@
             <div class="header">
                 <div class="user-info">
                     <span>👋 Benvenuto, <span id="user-email"></span></span>
-                    <button id="logout-btn" class="logout-btn">Esci</button>
+                    <button id="logout-btn" onclick="logoutUser()" class="logout-btn">Esci</button>
                 </div>
                 <h1> FitTracker</h1>
                 <p>Monitora i tuoi progressi in palestra e la tua alimentazione</p>
@@ -715,7 +715,7 @@
         }
 
 
-         async function logoutUser() {
+         window.logoutUser = async function() {
             try {
                 await signOut(auth);
             } catch (error) {
