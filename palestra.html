@@ -611,9 +611,9 @@
 
     <!-- Firebase SDK -->
     <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, onSnapshot, query, where } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js'; // <-- Aggiunti 'query' e 'where' qui
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
 
 
         // Configurazione Firebase
@@ -724,23 +724,6 @@
             }
         }
 
-        // Listener per cambiamenti di autenticazione
-        onAuthStateChanged(auth, (user) => {
-            currentUser = user;
-            if (user) {
-                // Utente loggato
-                document.getElementById('auth-screen').classList.add('hidden');
-                document.getElementById('main-app').classList.remove('hidden');
-                document.getElementById('user-email').textContent = user.email;
-                loadUserData();
-            } else {
-                // Utente non loggato
-                document.getElementById('main-app').classList.add('hidden');
-                document.getElementById('auth-screen').classList.remove('hidden');
-                exercises = [];
-                foods = [];
-            }
-        });
 
 
          // Funzioni di utilità
@@ -765,25 +748,26 @@
 
 
 
-        // Funzioni Firebase per esercizi
-        async function loadExercises() {
-            if (!currentUser) return;
-
-            try {
-                showLoading(true);
-                const querySnapshot = await getDocs(collection(db, 'exercises'));
-                exercises = [];
-                querySnapshot.forEach((doc) => {
-                    exercises.push({ id: doc.id, ...doc.data() });
-                });
-                displayExercises();
-                updateWorkoutStats();
-            } catch (error) {
-                console.error('Errore nel caricamento esercizi:', error);
-                showError('Errore nel caricamento degli esercizi');
-            } finally {
-                showLoading(false);
-            }
+            async function loadExercises() {
+          if (!currentUser) return;
+        
+          try {
+            showLoading(true);
+            // ✅ Aggiungi questa riga per filtrare per userId
+            const q = query(collection(db, 'exercises'), where("userId", "==", currentUser.uid));
+            const querySnapshot = await getDocs(q);
+            exercises = [];
+            querySnapshot.forEach((doc) => {
+              exercises.push({ id: doc.id, ...doc.data() });
+            });
+            displayExercises();
+            updateWorkoutStats();
+          } catch (error) {
+            console.error('Errore nel caricamento esercizi:', error);
+            showError('Errore nel caricamento degli esercizi');
+          } finally {
+            showLoading(false);
+          }
         }
 
         async function saveExercise(exercise) {
