@@ -459,9 +459,9 @@
             <div id="login-section">
                 <h3 style="margin-bottom: 20px; color: #666;">Accedi al tuo account</h3>
                 <div class="auth-form">
-                    <input type="email" id="login-email" type="email">
-                    <input type="password" id="login-password" type="password">
-                    <button id="login-btn" onclick="loginUser()">Accedi</button>
+                    <input type="email" id="login-email" class="auth-input" placeholder="Email" required>
+                    <input type="password" id="login-password"  class="auth-input" placeholder="Password" required>
+                    <button id="login-btn" onclick="loginUser()" class="auth-btn">Accedi</button>
                 </div>
                 <div class="auth-switch">
                     Non hai un account? <button onclick="switchToRegister()">Registrati</button>
