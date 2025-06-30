@@ -779,10 +779,11 @@
                 </div>
 
                 <div class="stats-grid">
-                    <div class="stat-card">
+                    <!-- <div class="stat-card">
                         <div class="stat-number" id="tipo_di_pasto">0</div>
                         <div class="stat-label">Calorie Totali</div>
                     </div>
+                 
                     <div class="stat-card">
                         <div class="stat-number" id="total-protein">0</div>
                         <div class="stat-label">Proteine (g)</div>
@@ -792,6 +793,7 @@
                         <div class="stat-label">Carboidrati (g)</div>
                     </div>
                 </div>
+                -->
             </div>
         </div>
     </div>
@@ -1009,7 +1011,7 @@
             foods.push({ id: doc.id, ...doc.data() });
         });
         displayFoods();
-        updateDietStats();
+        //updateDietStats();
     } catch (error) {
         console.error('Errore nel caricamento alimenti:', error);
         showError('Errore nel caricamento degli alimenti');
@@ -1031,7 +1033,7 @@
         food.id = docRef.id;
         foods.push(food);
         displayFoods();
-        updateDietStats();
+        //updateDietStats();
         clearFoodForm();
     } catch (error) {
         console.error('Errore nel salvare alimento:', error);
@@ -1046,7 +1048,7 @@
                 await deleteDoc(doc(db, 'foods', id));
                 foods = foods.filter(food => food.id !== id);
                 displayFoods();
-                updateDietStats();
+                //updateDietStats();
             } catch (error) {
                 console.error('Errore nell\'eliminare alimento:', error);
                 showError('Errore nell\'eliminare l\'alimento');
@@ -1349,16 +1351,14 @@ function createFoodHTML(food) {
              document.getElementById('total-sets').textContent = totalSets;
         }
 
+//Pensare ad una funziona utile
+    //function updateDietStats() {
+    //const totalProtein = foods.reduce((sum, food) => sum + food.protein, 0);
+    //const totalCarbs = foods.reduce((sum, food) => sum + food.carbs, 0);
 
-        function updateDietStats() {
-    const tipo_di_pasto = foods.reduce((sum, food) => sum + food.pasto, 0);
-    const totalProtein = foods.reduce((sum, food) => sum + food.protein, 0);
-    const totalCarbs = foods.reduce((sum, food) => sum + food.carbs, 0);
-
-    document.getElementById('tipo_di_pasto').textContent = tipo_di_pasto;
-    document.getElementById('total-protein').textContent = totalProtein.toFixed(1);
-    document.getElementById('total-carbs').textContent = totalCarbs.toFixed(1);
-}
+    //document.getElementById('total-protein').textContent = totalProtein.toFixed(1);
+    //document.getElementById('total-carbs').textContent = totalCarbs.toFixed(1);
+//}
 
        function clearExerciseForm() {
     document.getElementById('exercise-day').value = '';
