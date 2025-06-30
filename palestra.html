@@ -49,7 +49,7 @@
             font-size: 32px;
             font-weight: 700;
             margin-bottom: 8px;
-            background: linear-gradient(135deg, #007AFF 0%, #5856D6 100%);
+            background: linear-gradient(135deg, #7700ff 0%, #5856D6 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             letter-spacing: -0.5px;
@@ -63,7 +63,7 @@
 
         .loading {
             text-align: center;
-            color: #007AFF;
+            color: #7700ff;
             margin: 20px 0;
             font-weight: 500;
         }
@@ -84,7 +84,7 @@
             font-weight: 700;
             margin-bottom: 32px;
             text-align: center;
-            background: linear-gradient(135deg, #007AFF 0%, #5856D6 100%);
+            background: linear-gradient(135deg, #7700ff 0%, #5856D6 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -111,14 +111,14 @@
 
         .auth-input:focus {
             outline: none;
-            border-color: #007AFF;
+            border-color: #7700ff;
             background: rgba(44, 44, 46, 1);
             transform: scale(1.02);
         }
 
         .auth-btn {
             padding: 16px;
-            background: #007AFF;
+            background: #7700ff;
             color: white;
             border: none;
             border-radius: 12px;
@@ -153,7 +153,7 @@
         .auth-switch button {
             background: none;
             border: none;
-            color: #007AFF;
+            color: #7700ff;
             font-weight: 600;
             cursor: pointer;
             font-size: 15px;
@@ -212,7 +212,7 @@
         }
 
         .tab-btn.active {
-            background: #007AFF;
+            background: #7700ff;
             color: white;
             transform: scale(1.02);
         }
@@ -278,7 +278,7 @@
 
         .form-control:focus {
             outline: none;
-            border-color: #007AFF;
+            border-color: #7700ff;
             background: rgba(44, 44, 46, 1);
             transform: scale(1.02);
         }
@@ -300,7 +300,7 @@
         }
 
         .btn-primary {
-            background: #007AFF;
+            background: #7700ff;
             color: white;
         }
 
@@ -361,7 +361,7 @@
         }
 
         .exercise-order {
-            background: #007AFF;
+            background: #7700ff;
             color: white;
             font-size: 12px;
             font-weight: 700;
@@ -393,7 +393,7 @@
             font-size: 24px;
             font-weight: 700;
             margin-bottom: 4px;
-            color: #007AFF;
+            color: #7700ff;
         }
 
         .stat-label {
@@ -414,6 +414,19 @@
         }
 
         .day-filter::-webkit-scrollbar {
+            display: none;
+        }
+        .food-day-filter {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .food-day-filter::-webkit-scrollbar {
             display: none;
         }
 
@@ -440,6 +453,41 @@
             color: white;
             border-color: #007AFF;
         }
+        .food-day-btn {
+            padding: 8px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            background: rgba(44, 44, 46, 0.6);
+            color: #8E8E93;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .food-day-btn:active {
+            transform: scale(0.95);
+        }
+
+        .food-day-btn.active {
+            background: #007AFF;
+            color: white;
+            border-color: #007AFF;
+        }
+
+    .food-day-header {
+            background: rgba(0, 122, 255, 0.2);
+            color: #007AFF;
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin: 16px 0 12px 0;
+            font-weight: 600;
+            text-align: center;
+            font-size: 16px;
+            border: 1px solid rgba(0, 122, 255, 0.3);
+        }
 
         .day-header {
             background: rgba(0, 122, 255, 0.2);
@@ -454,6 +502,15 @@
         }
 
         .exercise-day-badge {
+            background: #007AFF;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+        .food-day-badge {
             background: #007AFF;
             color: white;
             padding: 4px 12px;
@@ -491,7 +548,7 @@
         }
 
         .exercise-order-badge {
-            background: #007AFF;
+            background: #7700ff;
             color: white;
             padding: 4px 8px;
             border-radius: 8px;
@@ -680,9 +737,19 @@
                     <h2 class="section-title">🥗 Aggiungi Alimento</h2>
                     <div class="form-group">
                         <div class="form-row diet">
+                            <select id="food-day" class="form-control">
+                             <option value="">Seleziona giorno</option>
+                                <option value="lunedi">Lunedì</option>
+                                <option value="martedi">Martedì</option>
+                                <option value="mercoledi">Mercoledì</option>
+                                <option value="giovedi">Giovedì</option>
+                                <option value="venerdi">Venerdì</option>
+                                <option value="sabato">Sabato</option>
+                                <option value="domenica">Domenica</option>   
+                            </select>         
                             <input type="text" id="food-name" class="form-control" placeholder="Nome alimento">
                             <input type="number" id="food-quantity" class="form-control" placeholder="Quantità (g)">
-                            <input type="number" id="food-calories" class="form-control" placeholder="Calorie">
+                            <input type="text" id="food-pasto" class="form-control" placeholder="Pasto">
                             <input type="number" id="food-protein" class="form-control" placeholder="Proteine (g)">
                             <input type="number" id="food-carbs" class="form-control" placeholder="Carboidrati (g)">
                         </div>
@@ -692,6 +759,17 @@
 
                 <div class="section-card">
                     <h2 class="section-title">🍽️ I Tuoi Alimenti</h2>
+
+                    <div class="food-day-filter">
+    <button class="food-day-btn active" onclick="filterFoodByDay('all')">Tutti</button>
+    <button class="food-day-btn" onclick="filterFoodByDay('lunedi')">Lun</button>
+    <button class="food-day-btn" onclick="filterFoodByDay('martedi')">Mar</button>
+    <button class="food-day-btn" onclick="filterFoodByDay('mercoledi')">Mer</button>
+    <button class="food-day-btn" onclick="filterFoodByDay('giovedi')">Gio</button>
+    <button class="food-day-btn" onclick="filterFoodByDay('venerdi')">Ven</button>
+    <button class="food-day-btn" onclick="filterFoodByDay('sabato')">Sab</button>
+    <button class="food-day-btn" onclick="filterFoodByDay('domenica')">Dom</button>
+</div>
                     <div id="foods-list">
                         <div class="empty-state">
                             <div class="empty-state-icon">🍽️</div>
@@ -702,7 +780,7 @@
 
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <div class="stat-number" id="total-calories">0</div>
+                        <div class="stat-number" id="tipo_di_pasto">0</div>
                         <div class="stat-label">Calorie Totali</div>
                     </div>
                     <div class="stat-card">
@@ -747,6 +825,7 @@
         let exercises = [];
         let foods = [];
         let currentDayFilter = 'all';
+        let currentFoodDayFilter = 'all';
         let currentUser;
 
 
@@ -784,7 +863,8 @@
                     document.getElementById("main-app").classList.remove("hidden");
                     document.getElementById("user-email").textContent = user.email;
 
-                    loadExercises(); // ⚠️ Carica i dati quando l'utente è loggato
+                    loadExercises();
+                    loadFoods(); 
                 } else {
                     currentUser = null; // ❌ Nessun utente
                     document.getElementById("login-section").style.display = "block";
@@ -917,39 +997,49 @@
 
         // Funzioni Firebase per alimenti
         async function loadFoods() {
-            try {
-                showLoading(true);
-                const querySnapshot = await getDocs(collection(db, 'foods'));
-                foods = [];
-                querySnapshot.forEach((doc) => {
-                    foods.push({ id: doc.id, ...doc.data() });
-                });
-                displayFoods();
-                updateDietStats();
-            } catch (error) {
-                console.error('Errore nel caricamento alimenti:', error);
-                showError('Errore nel caricamento degli alimenti');
-            } finally {
-                showLoading(false);
-            }
-        }
+    if (!currentUser) return; // Ensure user is logged in
+
+    try {
+        showLoading(true);
+        // Add this line to filter by userId, similar to exercises
+        const q = query(collection(db, 'foods'), where("userId", "==", currentUser.uid));
+        const querySnapshot = await getDocs(q);
+        foods = [];
+        querySnapshot.forEach((doc) => {
+            foods.push({ id: doc.id, ...doc.data() });
+        });
+        displayFoods();
+        updateDietStats();
+    } catch (error) {
+        console.error('Errore nel caricamento alimenti:', error);
+        showError('Errore nel caricamento degli alimenti');
+    } finally {
+        showLoading(false);
+    }
+}
 
         async function saveFood(food) {
-            try {
-                disableButton('add-food-btn', true);
-                const docRef = await addDoc(collection(db, 'foods'), food);
-                food.id = docRef.id;
-                foods.push(food);
-                displayFoods();
-                updateDietStats();
-                clearFoodForm();
-            } catch (error) {
-                console.error('Errore nel salvare alimento:', error);
-                showError('Errore nel salvare l\'alimento');
-            } finally {
-                disableButton('add-food-btn', false);
-            }
-        }
+    if (!currentUser) return; // Ensure user is logged in
+
+    try {
+        disableButton('add-food-btn', true);
+
+        // Add userId BEFORE saving
+        food.userId = currentUser.uid; // Add this line
+
+        const docRef = await addDoc(collection(db, 'foods'), food);
+        food.id = docRef.id;
+        foods.push(food);
+        displayFoods();
+        updateDietStats();
+        clearFoodForm();
+    } catch (error) {
+        console.error('Errore nel salvare alimento:', error);
+        showError('Errore nel salvare l\'alimento');
+    } finally {
+        disableButton('add-food-btn', false);
+    }
+}   
 
         async function deleteFood(id) {
             try {
@@ -1013,29 +1103,31 @@
         }
 
         window.addFood = function() {
-            const name = document.getElementById('food-name').value;
-            const quantity = parseInt(document.getElementById('food-quantity').value);
-            const calories = parseInt(document.getElementById('food-calories').value);
-            const protein = parseFloat(document.getElementById('food-protein').value);
-            const carbs = parseFloat(document.getElementById('food-carbs').value);
+        const name = document.getElementById('food-name').value;
+        const quantity = parseInt(document.getElementById('food-quantity').value);
+        const pasto = document.getElementById('food-pasto').value;
+        const protein = parseFloat(document.getElementById('food-protein').value);
+        const carbs = parseFloat(document.getElementById('food-carbs').value);
+        const day = document.getElementById('food-day').value; // Add this line to get the day
 
-            if (!name || !quantity || !calories || protein === '' || carbs === '') {
-                alert('Per favore, compila tutti i campi');
-                return;
-            }
-
-            const food = {
-                name: name,
-                quantity: quantity,
-                calories: calories,
-                protein: protein,
-                carbs: carbs,
-                date: new Date().toLocaleDateString('it-IT'),
-                timestamp: new Date()
-            };
-
-            saveFood(food);
+        if (!name || !quantity || pasto ==='' || protein === '' || carbs === '' || !day) { // Add !day to the validation
+            alert('Per favore, compila tutti i campi');
+            return;
         }
+
+        const food = {
+            name: name,
+            quantity: quantity,
+            pasto: pasto,
+            protein: protein,
+            carbs: carbs,
+            day: day, // Add the day to the food object
+            date: new Date().toLocaleDateString('it-IT'),
+            timestamp: new Date()
+        };
+
+    saveFood(food);
+}
 
         window.removeExercise = function(id) {
             if (confirm('Sei sicuro di voler eliminare questo esercizio?')) {
@@ -1048,6 +1140,18 @@
                 deleteFood(id);
             }
         }
+
+
+        window.filterFoodByDay = function(day) {
+    currentFoodDayFilter = day;
+
+    document.querySelectorAll('.food-day-btn').forEach(btn => { // You'll need a new class for food day filter buttons
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+
+    displayFoods();
+}
 
         window.filterByDay = function(day) {
             currentDayFilter = day;
@@ -1145,32 +1249,83 @@
     `;
 }    
 
-        function displayFoods() {
-            const container = document.getElementById('foods-list');
-            
-            if (foods.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">🍽️</div>
-                        <p>Nessun alimento aggiunto ancora.<br>Inizia a tracciare la tua alimentazione!</p>
-                    </div>
-                `;
-                return;
-            }
+        
+function displayFoods() {
+    const container = document.getElementById('foods-list');
 
-            container.innerHTML = foods.map(food => `
-                <div class="food-item">
-                    <div class="food-header">
-                        <div class="food-name">${food.name}</div>
-                        <button class="btn btn-danger" onclick="removeFood('${food.id}')">Rimuovi</button>
-                    </div>
-                    <div class="food-details">
-                        ${food.quantity}g • ${food.calories} cal • ${food.protein}g proteine • ${food.carbs}g carboidrati
-                        <br><small>Aggiunto il: ${food.date}</small>
-                    </div>
-                </div>
-            `).join('');
+    let filteredFoods = foods;
+    if (currentFoodDayFilter !== 'all') {
+        filteredFoods = foods.filter(food => food.day === currentFoodDayFilter);
+    }
+
+    
+    filteredFoods.sort((a, b) => {
+        if (currentFoodDayFilter === 'all' && a.day !== b.day) {
+            const dayOrder = ['lunedi', 'martedi', 'mercoledi', 'giovedi', 'venerdi', 'sabato', 'domenica'];
+            return dayOrder.indexOf(a.day) - dayOrder.indexOf(b.day);
         }
+       
+        return new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime();
+    });
+
+    if (filteredFoods.length === 0) {
+        const message = currentFoodDayFilter === 'all'
+            ? 'Nessun alimento aggiunto ancora.<br>Inizia a tracciare la tua alimentazione!'
+            : `Nessun alimento per ${getDayName(currentFoodDayFilter)}.<br>Aggiungi un alimento per questo giorno!`;
+
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">🍽️</div>
+                <p>${message}</p>
+            </div>
+        `;
+        return;
+    }
+
+    if (currentFoodDayFilter === 'all') {
+        const foodsByDay = {};
+        const dayOrder = ['lunedi', 'martedi', 'mercoledi', 'giovedi', 'venerdi', 'sabato', 'domenica'];
+
+        filteredFoods.forEach(food => {
+            if (!foodsByDay[food.day]) {
+                foodsByDay[food.day] = [];
+            }
+            foodsByDay[food.day].push(food);
+        });
+
+        let html = '';
+        dayOrder.forEach(day => {
+            if (foodsByDay[day]) {
+                html += `<div class="food-day-header">${getDayName(day)}</div>`;
+                foodsByDay[day].forEach(food => {
+                    html += createFoodHTML(food); // Use a separate function for food HTML
+                });
+            }
+        });
+        container.innerHTML = html;
+    } else {
+        container.innerHTML = filteredFoods.map(food => createFoodHTML(food)).join('');
+    }
+}
+
+function createFoodHTML(food) {
+    return `
+        <div class="food-item">
+            <div class="food-header">
+                <div class="food-name">
+                    ${food.name}
+                    ${currentFoodDayFilter === 'all' ? '' : `<span class="food-day-badge">${getDayName(food.day)}</span>`}
+                </div>
+                <button class="btn btn-danger" onclick="removeFood('${food.id}')">Rimuovi</button>
+            </div>
+            <div class="food-details">
+                ${food.quantity}g • ${food.pasto} • ${food.protein}g proteine • ${food.carbs}g carboidrati
+                <br><small>Aggiunto il: ${food.date}</small>
+            </div>
+        </div>
+    `;
+}
+
 
         function getDayName(day) {
             const dayNames = {
@@ -1196,11 +1351,11 @@
 
 
         function updateDietStats() {
-    const totalCalories = foods.reduce((sum, food) => sum + food.calories, 0);
+    const tipo_di_pasto = foods.reduce((sum, food) => sum + food.pasto, 0);
     const totalProtein = foods.reduce((sum, food) => sum + food.protein, 0);
     const totalCarbs = foods.reduce((sum, food) => sum + food.carbs, 0);
 
-    document.getElementById('total-calories').textContent = totalCalories;
+    document.getElementById('tipo_di_pasto').textContent = tipo_di_pasto;
     document.getElementById('total-protein').textContent = totalProtein.toFixed(1);
     document.getElementById('total-carbs').textContent = totalCarbs.toFixed(1);
 }
@@ -1216,7 +1371,7 @@
         function clearFoodForm() {
             document.getElementById('food-name').value = '';
             document.getElementById('food-quantity').value = '';
-            document.getElementById('food-calories').value = '';
+            document.getElementById('food-pasto').value = '';
             document.getElementById('food-protein').value = '';
             document.getElementById('food-carbs').value = '';
         }
@@ -1272,5 +1427,4 @@
 
     </script>
 </body>
-</html>    
-    
+</html>
