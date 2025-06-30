@@ -306,6 +306,18 @@
             font-size: 0.95rem;
         }
 
+        .exercise-order {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 0.8rem;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 12px;
+            margin-right: 10px;
+            min-width: 20px;
+            text-align: center;
+        }
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -521,7 +533,7 @@
                             <input type="text" id="exercise-name" class="form-control" placeholder="Nome esercizio (es. Panca piana)">
                             <input type="number" id="exercise-sets" class="form-control" placeholder="Serie">
                             <input type="text" id="exercise-reps" class="form-control" placeholder="Ripetizioni">
-                            <input type="number" id="exercise-weight" class="form-control" placeholder="Peso (kg)">
+                            <input type="number" id="exercise-order" class="form-control" placeholder="Ordine (1, 2, 3...)" min="1">
                         </div>
                         <button id="add-exercise-btn" class="btn btn-primary" onclick="addExercise()">Aggiungi Esercizio</button>
                     </div>
@@ -559,8 +571,8 @@
                         <div class="stat-label">Serie Totali</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number" id="total-volume">0</div>
-                        <div class="stat-label">Volume Totale (kg)</div>
+                        <div class="stat-number" id="total-days">0</div>
+                        <div class="stat-label">Giorni Allenamento</div>
                     </div>
                 </div>
             </div>
