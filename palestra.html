@@ -872,10 +872,10 @@
             const name = document.getElementById('exercise-name').value;
             const setsValue = document.getElementById('exercise-sets').value;
             const repsValue = document.getElementById('exercise-reps').value;
-            const weightValue = document.getElementById('exercise-weight').value;
+            const orderValue = document.getElementById('exercise-order').value;
 
             // Validazione più precisa
-            if (!day || !name || !setsValue || !repsValue || !weightValue) {
+            if (!day || !name || !setsValue || !repsValue || !orderValue) {
                 alert('Per favore, compila tutti i campi incluso il giorno');
                 return;
             }
@@ -883,9 +883,10 @@
             const sets = parseInt(setsValue);
             const reps = repsValue;
             const weight = parseFloat(weightValue);
+            const order= parseInt(orderValue)
 
             // Controllo che i valori numerici siano validi
-            if (isNaN(sets) ||  isNaN(weight) || sets <= 0 || weight <= 0) {
+            if (isNaN(sets) ||  isNaN(weight) || sets <= 0 || weight <= 0 || order <= 0) {
                 alert('Per favore, inserisci valori numerici validi e maggiori di zero');
                 return;
             }
@@ -896,6 +897,7 @@
                 sets: sets,
                 reps: reps,
                 weight: weight,
+                order:order,
                 date: new Date().toLocaleDateString('it-IT'),
                 timestamp: new Date()
             };
@@ -951,72 +953,90 @@
             displayExercises();
         }
 
-        function displayExercises() {
-            const container = document.getElementById('exercises-list');
-            
-            let filteredExercises = exercises;
-            if (currentDayFilter !== 'all') {
-                filteredExercises = exercises.filter(exercise => exercise.day === currentDayFilter);
-            }
-            
-            if (filteredExercises.length === 0) {
-                const message = currentDayFilter === 'all' 
-                    ? 'Nessun esercizio aggiunto ancora.<br>Inizia ad aggiungere i tuoi allenamenti!'
-                    : `Nessun esercizio per ${getDayName(currentDayFilter)}.<br>Aggiungi un esercizio per questo giorno!`;
-                    
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">🏋️</div>
-                        <p>${message}</p>
-                    </div>
-                `;
-                return;
-            }
-
-            if (currentDayFilter === 'all') {
-                const exercisesByDay = {};
-                const dayOrder = ['lunedi', 'martedi', 'mercoledi', 'giovedi', 'venerdi', 'sabato', 'domenica'];
-                
-                filteredExercises.forEach(exercise => {
-                    if (!exercisesByDay[exercise.day]) {
-                        exercisesByDay[exercise.day] = [];
-                    }
-                    exercisesByDay[exercise.day].push(exercise);
-                });
-
-                let html = '';
-                dayOrder.forEach(day => {
-                    if (exercisesByDay[day]) {
-                        html += `<div class="day-header">${getDayName(day)}</div>`;
-                        exercisesByDay[day].forEach(exercise => {
-                            html += createExerciseHTML(exercise);
-                        });
-                    }
-                });
-                
-                container.innerHTML = html;
-            } else {
-                container.innerHTML = filteredExercises.map(exercise => createExerciseHTML(exercise)).join('');
-            }
+               function displayExercises() {
+    const container = document.getElementById('exercises-list');
+    
+    let filteredExercises = exercises;
+    if (currentDayFilter !== 'all') {
+        filteredExercises = exercises.filter(exercise => exercise.day === currentDayFilter);
+    }
+    
+    // ⭐ ORDINA GLI ESERCIZI PER IL CAMPO ORDER
+    filteredExercises.sort((a, b) => {
+        // Prima ordina per giorno (se visualizziamo tutti i giorni)
+        if (currentDayFilter === 'all' && a.day !== b.day) {
+            const dayOrder = ['lunedi', 'martedi', 'mercoledi', 'giovedi', 'venerdi', 'sabato', 'domenica'];
+            return dayOrder.indexOf(a.day) - dayOrder.indexOf(b.day);
         }
+        // Poi ordina per order (numero di ordinamento)
+        return (a.order || 999) - (b.order || 999); // Gli esercizi senza order vanno alla fine
+    });
+    
+    if (filteredExercises.length === 0) {
+        const message = currentDayFilter === 'all' 
+            ? 'Nessun esercizio aggiunto ancora.<br>Inizia ad aggiungere i tuoi allenamenti!'
+            : `Nessun esercizio per ${getDayName(currentDayFilter)}.<br>Aggiungi un esercizio per questo giorno!`;
+            
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">🏋️</div>
+                <p>${message}</p>
+            </div>
+        `;
+        return;
+    }
+
+    if (currentDayFilter === 'all') {
+        const exercisesByDay = {};
+        const dayOrder = ['lunedi', 'martedi', 'mercoledi', 'giovedi', 'venerdi', 'sabato', 'domenica'];
+        
+        // Raggruppa per giorno mantenendo l'ordinamento
+        filteredExercises.forEach(exercise => {
+            if (!exercisesByDay[exercise.day]) {
+                exercisesByDay[exercise.day] = [];
+            }
+            exercisesByDay[exercise.day].push(exercise);
+        });
+
+        // ⭐ ORDINA OGNI GRUPPO DI ESERCIZI PER GIORNO
+        Object.keys(exercisesByDay).forEach(day => {
+            exercisesByDay[day].sort((a, b) => (a.order || 999) - (b.order || 999));
+        });
+
+        let html = '';
+        dayOrder.forEach(day => {
+            if (exercisesByDay[day]) {
+                html += `<div class="day-header">${getDayName(day)}</div>`;
+                exercisesByDay[day].forEach(exercise => {
+                    html += createExerciseHTML(exercise);
+                });
+            }
+        });
+        
+        container.innerHTML = html;
+    } else {
+        container.innerHTML = filteredExercises.map(exercise => createExerciseHTML(exercise)).join('');
+    }
+}
 
         function createExerciseHTML(exercise) {
-            return `
-                <div class="exercise-item">
-                    <div class="exercise-header">
-                        <div class="exercise-name">
-                            ${exercise.name}
-                            ${currentDayFilter === 'all' ? '' : `<span class="exercise-day-badge">${getDayName(exercise.day)}</span>`}
-                        </div>
-                        <button class="btn btn-danger" onclick="removeExercise('${exercise.id}')">Rimuovi</button>
-                    </div>
-                    <div class="exercise-details">
-                        ${exercise.sets} serie × ${exercise.reps} ripetizioni @ ${exercise.weight}kg
-                        <br><small>Aggiunto il: ${exercise.date}</small>
-                    </div>
+    return `
+        <div class="exercise-item">
+            <div class="exercise-header">
+                <div class="exercise-name">
+                    <span class="exercise-order-badge">#${exercise.order || '?'}</span>
+                    ${exercise.name}
+                    ${currentDayFilter === 'all' ? '' : `<span class="exercise-day-badge">${getDayName(exercise.day)}</span>`}
                 </div>
-            `;
-        }
+                <button class="btn btn-danger" onclick="removeExercise('${exercise.id}')">Rimuovi</button>
+            </div>
+            <div class="exercise-details">
+                ${exercise.sets} serie × ${exercise.reps} ripetizioni @ ${exercise.weight}kg
+                <br><small>Aggiunto il: ${exercise.date}</small>
+            </div>
+        </div>
+    `;
+}    
 
         function displayFoods() {
             const container = document.getElementById('foods-list');
@@ -1078,13 +1098,14 @@
     document.getElementById('total-carbs').textContent = totalCarbs.toFixed(1);
 }
 
-        function clearExerciseForm() {
-            document.getElementById('exercise-day').value = '';
-            document.getElementById('exercise-name').value = '';
-            document.getElementById('exercise-sets').value = '';
-            document.getElementById('exercise-reps').value = '';
-            document.getElementById('exercise-weight').value = '';
-        }
+       function clearExerciseForm() {
+    document.getElementById('exercise-day').value = '';
+    document.getElementById('exercise-name').value = '';
+    document.getElementById('exercise-sets').value = '';
+    document.getElementById('exercise-reps').value = '';
+    document.getElementById('exercise-weight').value = '';
+    document.getElementById('exercise-order').value = ''; // ⭐ NUOVO CAMPO
+}
 
         function clearFoodForm() {
             document.getElementById('food-name').value = '';
