@@ -894,11 +894,10 @@
 
             const sets = parseInt(setsValue);
             const reps = repsValue;
-            const weight = parseFloat(weightValue);
             const order= parseInt(orderValue)
 
             // Controllo che i valori numerici siano validi
-            if (isNaN(sets) ||  isNaN(weight) || sets <= 0 || weight <= 0 || order <= 0) {
+            if (isNaN(sets) ||  sets <= 0 ||  order <= 0) {
                 alert('Per favore, inserisci valori numerici validi e maggiori di zero');
                 return;
             }
@@ -908,7 +907,6 @@
                 name: name,
                 sets: sets,
                 reps: reps,
-                weight: weight,
                 order:order,
                 date: new Date().toLocaleDateString('it-IT'),
                 timestamp: new Date()
@@ -1115,7 +1113,6 @@
     document.getElementById('exercise-name').value = '';
     document.getElementById('exercise-sets').value = '';
     document.getElementById('exercise-reps').value = '';
-    document.getElementById('exercise-weight').value = '';
     document.getElementById('exercise-order').value = ''; // ⭐ NUOVO CAMPO
 }
 
