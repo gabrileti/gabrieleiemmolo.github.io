@@ -802,7 +802,7 @@
     <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
     import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, onSnapshot, query, where } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js'; // <-- Aggiunti 'query' e 'where' qui
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
 
 
         // Configurazione Firebase
@@ -851,7 +851,7 @@
                     try {
                         await signInWithEmailAndPassword(auth, email, password);
                         console.log("Login eseguito con successo");
-                        // ⚠️ NON serve fare altro qui! Il cambio schermata avviene sotto con onAuthStateChanged
+                        
                     } catch (error) {
                         console.error("Errore nel login:", error.message);
                         alert("Email o password errati");
@@ -859,51 +859,75 @@
                 };
 
                 onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    currentUser = user; // ✅ Salva l'utente loggato
-                    document.getElementById("login-section").style.display = "none";
-                    document.getElementById("main-app").classList.remove("hidden");
-                    document.getElementById("user-email").textContent = user.email;
+    if (user) {
+        currentUser = user; // Salva l'utente loggato
+        document.getElementById("login-section").style.display = "none";
+        document.getElementById("main-app").classList.remove("hidden");
+        document.getElementById("user-email").textContent = user.email;
 
-                    loadExercises();
-                    loadFoods(); 
-                } else {
-                    currentUser = null; // ❌ Nessun utente
-                    document.getElementById("login-section").style.display = "block";
-                    document.getElementById("main-app").classList.add("hidden");
-                }
-            });
-
-             window.registerUser = async function () {
-            const email = document.getElementById('register-email').value;
-            const password = document.getElementById('register-password').value;
-            const confirmPassword = document.getElementById('register-password-confirm').value;
-
-            if (!email || !password || !confirmPassword) {
-                showError('Compila tutti i campi');
-                return;
-            }
-
-            if (password !== confirmPassword) {
-                showError('Le password non coincidono');
-                return;
-            }
-
-            if (password.length < 6) {
-                showError('La password deve avere almeno 6 caratteri');
-                return;
-            }
-
-            try {
-                disableButton('register-btn', true);
-                await createUserWithEmailAndPassword(auth, email, password);
-            } catch (error) {
-                console.error('Errore registrazione:', error);
-                showError('Errore nella registrazione: ' + error.message);
-            } finally {
-                disableButton('register-btn', false);
-            }
+        // Controlla se l'email è verificata
+        if (user.emailVerified) {
+            console.log("Email verificata!");
+            // Qui puoi mostrare l'interfaccia completa dell'applicazione
+            loadExercises();
+            loadFoods();
+        } else {
+            console.log("Email non verificata. Chiedi all'utente di verificare.");
+            // Qui puoi mostrare un messaggio all'utente per verificare la sua email
+            document.getElementById("main-app").classList.add("hidden"); // Nascondi l'app principale
+            document.getElementById("verification-message").classList.remove("hidden"); // Mostra un messaggio di verifica
+            // Potresti anche offrire la possibilità di inviare nuovamente l'email di verifica
         }
+
+    } else {
+        currentUser = null; // Nessun utente
+        document.getElementById("login-section").style.display = "block";
+        document.getElementById("main-app").classList.add("hidden");
+        // Assicurati che il messaggio di verifica sia nascosto se l'utente non è loggato
+        document.getElementById("verification-message").classList.add("hidden");
+    }
+});
+
+                        window.registerUser = async function () {
+                const email = document.getElementById('register-email').value;
+                const password = document.getElementById('register-password').value;
+                const confirmPassword = document.getElementById('register-password-confirm').value;
+
+                if (!email || !password || !confirmPassword) {
+                    showError('Compila tutti i campi');
+                    return;
+                }
+
+                if (password !== confirmPassword) {
+                    showError('Le password non coincidono');
+                    return;
+                }
+
+                if (password.length < 6) {
+                    showError('La password deve avere almeno 6 caratteri');
+                    return;
+                }
+
+                try {
+                    disableButton('register-btn', true);
+                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                    const user = userCredential.user;
+
+                    // Invia l'email di verifica all'utente appena registrato
+                    await sendEmailVerification(user);
+
+                    console.log("Registrazione eseguita con successo e email di verifica inviata!");
+                    alert("Registrazione avvenuta con successo! Ti abbiamo inviato un'email di verifica. Controlla la tua casella di posta.");
+                    // Puoi anche reindirizzare l'utente o aggiornare l'UI qui, ad esempio:
+                    window.switchToLogin(); // Ritorna alla schermata di login dopo la registrazione
+                } catch (error) {
+                    console.error('Errore registrazione:', error);
+                    showError('Errore nella registrazione: ' + error.message);
+                } finally {
+                    disableButton('register-btn', false);
+                }
+            }
+
 
 
          window.logoutUser = async function() {
@@ -1003,7 +1027,6 @@
 
     try {
         showLoading(true);
-        // Add this line to filter by userId, similar to exercises
         const q = query(collection(db, 'foods'), where("userId", "==", currentUser.uid));
         const querySnapshot = await getDocs(q);
         foods = [];
@@ -1264,6 +1287,7 @@ function displayFoods() {
     filteredFoods.sort((a, b) => {
         if (currentFoodDayFilter === 'all' && a.day !== b.day) {
             const dayOrder = ['lunedi', 'martedi', 'mercoledi', 'giovedi', 'venerdi', 'sabato', 'domenica'];
+            //const pastoOrder = ['Colazione', 'Spuntino mattina', 'Pranzo','Spuntino pomeriggio', 'Cena']
             return dayOrder.indexOf(a.day) - dayOrder.indexOf(b.day);
         }
        
@@ -1321,7 +1345,7 @@ function createFoodHTML(food) {
                 <button class="btn btn-danger" onclick="removeFood('${food.id}')">Rimuovi</button>
             </div>
             <div class="food-details">
-                ${food.quantity}g • ${food.pasto}
+                ${food.quantity}g • ${food.pasto} 
                 <br><small>Aggiunto il: ${food.date}</small>
             </div>
         </div>
@@ -1347,7 +1371,7 @@ function createFoodHTML(food) {
             const totalExercises = exercises.length;
             const totalSets = exercises.reduce((sum, ex) => sum + ex.sets, 0);
 
-              document.getElementById('total-exercises').textContent = totalExercises;
+             document.getElementById('total-exercises').textContent = totalExercises;
              document.getElementById('total-sets').textContent = totalSets;
         }
 
@@ -1365,7 +1389,7 @@ function createFoodHTML(food) {
     document.getElementById('exercise-name').value = '';
     document.getElementById('exercise-sets').value = '';
     document.getElementById('exercise-reps').value = '';
-    document.getElementById('exercise-order').value = ''; // ⭐ NUOVO CAMPO
+    document.getElementById('exercise-order').value = ''; 
 }
 
         function clearFoodForm() {
@@ -1427,4 +1451,6 @@ function createFoodHTML(food) {
 
     </script>
 </body>
-</html>
+</html>    
+        
+    
