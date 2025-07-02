@@ -859,75 +859,51 @@
                 };
 
                 onAuthStateChanged(auth, (user) => {
-    if (user) {
-        currentUser = user; // Salva l'utente loggato
-        document.getElementById("login-section").style.display = "none";
-        document.getElementById("main-app").classList.remove("hidden");
-        document.getElementById("user-email").textContent = user.email;
+                if (user) {
+                    currentUser = user; // ✅ Salva l'utente loggato
+                    document.getElementById("login-section").style.display = "none";
+                    document.getElementById("main-app").classList.remove("hidden");
+                    document.getElementById("user-email").textContent = user.email;
 
-        // Controlla se l'email è verificata
-        if (user.emailVerified) {
-            console.log("Email verificata!");
-            // Qui puoi mostrare l'interfaccia completa dell'applicazione
-            loadExercises();
-            loadFoods();
-        } else {
-            console.log("Email non verificata. Chiedi all'utente di verificare.");
-            // Qui puoi mostrare un messaggio all'utente per verificare la sua email
-            document.getElementById("main-app").classList.add("hidden"); // Nascondi l'app principale
-            document.getElementById("verification-message").classList.remove("hidden"); // Mostra un messaggio di verifica
-            // Potresti anche offrire la possibilità di inviare nuovamente l'email di verifica
-        }
-
-    } else {
-        currentUser = null; // Nessun utente
-        document.getElementById("login-section").style.display = "block";
-        document.getElementById("main-app").classList.add("hidden");
-        // Assicurati che il messaggio di verifica sia nascosto se l'utente non è loggato
-        document.getElementById("verification-message").classList.add("hidden");
-    }
-});
-
-                        window.registerUser = async function () {
-                const email = document.getElementById('register-email').value;
-                const password = document.getElementById('register-password').value;
-                const confirmPassword = document.getElementById('register-password-confirm').value;
-
-                if (!email || !password || !confirmPassword) {
-                    showError('Compila tutti i campi');
-                    return;
+                    loadExercises();
+                    loadFoods(); 
+                } else {
+                    currentUser = null; // ❌ Nessun utente
+                    document.getElementById("login-section").style.display = "block";
+                    document.getElementById("main-app").classList.add("hidden");
                 }
+            });
 
-                if (password !== confirmPassword) {
-                    showError('Le password non coincidono');
-                    return;
-                }
+             window.registerUser = async function () {
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-password-confirm').value;
 
-                if (password.length < 6) {
-                    showError('La password deve avere almeno 6 caratteri');
-                    return;
-                }
-
-                try {
-                    disableButton('register-btn', true);
-                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                    const user = userCredential.user;
-
-                    // Invia l'email di verifica all'utente appena registrato
-                    await sendEmailVerification(user);
-
-                    console.log("Registrazione eseguita con successo e email di verifica inviata!");
-                    alert("Registrazione avvenuta con successo! Ti abbiamo inviato un'email di verifica. Controlla la tua casella di posta.");
-                    // Puoi anche reindirizzare l'utente o aggiornare l'UI qui, ad esempio:
-                    window.switchToLogin(); // Ritorna alla schermata di login dopo la registrazione
-                } catch (error) {
-                    console.error('Errore registrazione:', error);
-                    showError('Errore nella registrazione: ' + error.message);
-                } finally {
-                    disableButton('register-btn', false);
-                }
+            if (!email || !password || !confirmPassword) {
+                showError('Compila tutti i campi');
+                return;
             }
 
+            if (password !== confirmPassword) {
+                showError('Le password non coincidono');
+                return;
+            }
+
+            if (password.length < 6) {
+                showError('La password deve avere almeno 6 caratteri');
+                return;
+            }
+
+            try {
+                disableButton('register-btn', true);
+                await createUserWithEmailAndPassword(auth, email, password);
+            } catch (error) {
+                console.error('Errore registrazione:', error);
+                showError('Errore nella registrazione: ' + error.message);
+            } finally {
+                disableButton('register-btn', false);
+            }
+        }
 
 
          window.logoutUser = async function() {
@@ -1451,6 +1427,4 @@ function createFoodHTML(food) {
 
     </script>
 </body>
-</html>    
-        
-    
+</html>
