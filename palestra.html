@@ -183,6 +183,103 @@
             transition: all 0.2s ease;
         }
 
+        const sessionStyles = `
+    .session-progress {
+        background: rgba(28, 28, 30, 0.8);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 24px;
+        margin-bottom: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        text-align: center;
+    }
+
+    .progress-text {
+        font-size: 24px;
+        font-weight: 700;
+        color: #007AFF;
+        margin-bottom: 12px;
+    }
+
+    .progress-bar {
+        background: rgba(44, 44, 46, 0.8);
+        height: 12px;
+        border-radius: 6px;
+        overflow: hidden;
+        margin-bottom: 12px;
+    }
+
+    .progress-fill {
+        background: linear-gradient(90deg, #007AFF, #5856D6);
+        height: 100%;
+        border-radius: 6px;
+        transition: width 0.3s ease;
+        width: 0%;
+    }
+
+    .progress-subtitle {
+        color: #8E8E93;
+        font-size: 16px;
+        font-weight: 500;
+    }
+
+    .session-exercise-item {
+        background: rgba(44, 44, 46, 0.6);
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+
+    .session-exercise-item:hover {
+        background: rgba(44, 44, 46, 0.8);
+        transform: translateY(-2px);
+    }
+
+    .session-exercise-item.completed {
+        background: rgba(52, 199, 89, 0.2);
+        border-color: rgba(52, 199, 89, 0.3);
+    }
+
+    .completion-icon {
+        font-size: 18px;
+        margin-right: 8px;
+    }
+
+    .exercise-status {
+        font-size: 14px;
+        font-weight: 600;
+        padding: 4px 12px;
+        border-radius: 12px;
+        background: rgba(142, 142, 147, 0.2);
+        color: #8E8E93;
+    }
+
+    .session-exercise-item.completed .exercise-status {
+        background: rgba(52, 199, 89, 0.3);
+        color: #34C759;
+    }
+
+    .btn-reset {
+        background: rgba(255, 149, 0, 0.2);
+        color: #FF9500;
+        border: 1px solid rgba(255, 149, 0, 0.3);
+        margin-top: 16px;
+    }
+
+    .btn-reset:hover:not(:disabled) {
+        background: rgba(255, 149, 0, 0.3);
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+`;
+
+
         .logout-btn:hover {
             background: rgba(255, 59, 48, 0.3);
         }
@@ -664,8 +761,43 @@
             </div>
 
             <div class="tabs">
+                <button class="tab-btn" onclick="showTab('session')">⚡ Sessione</button>
                 <button class="tab-btn active" onclick="showTab('workout')">🏋️ Allenamento</button>
                 <button class="tab-btn" onclick="showTab('diet')">🥗 Dieta</button>
+            </div>
+
+            <div id="session-tab" class="tab-content">
+                <div class="session-progress">
+                    <div class="progress-text" id="session-progress-text">0 / 0 esercizi completati</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="session-progress-fill"></div>
+                    </div>
+                    <div class="progress-subtitle" id="session-day-text">Seleziona il giorno di allenamento</div>
+                </div>
+
+                <div class="section-card">
+                    <h2 class="section-title">📅 Seleziona Giorno</h2>
+                    <div class="day-filter">
+                        <button class="day-btn" onclick="loadSessionDay('lunedi')">Lun</button>
+                        <button class="day-btn" onclick="loadSessionDay('martedi')">Mar</button>
+                        <button class="day-btn" onclick="loadSessionDay('mercoledi')">Mer</button>
+                        <button class="day-btn" onclick="loadSessionDay('giovedi')">Gio</button>
+                        <button class="day-btn" onclick="loadSessionDay('venerdi')">Ven</button>
+                        <button class="day-btn" onclick="loadSessionDay('sabato')">Sab</button>
+                        <button class="day-btn" onclick="loadSessionDay('domenica')">Dom</button>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <h2 class="section-title">🎯 Esercizi di Oggi</h2>
+                    <div id="session-exercises">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">🏋️</div>
+                            <p>Seleziona un giorno per iniziare la tua sessione di allenamento!</p>
+                        </div>
+                    </div>
+                    <button id="reset-session-btn" class="btn btn-reset hidden" onclick="resetSession()">🔄 Reset Sessione</button>
+                </div>
             </div>
 
             <!-- Sezione Allenamento -->
@@ -782,7 +914,7 @@
                     <!-- <div class="stat-card">
                         <div class="stat-number" id="tipo_di_pasto">0</div>
                         <div class="stat-label">Calorie Totali</div>
-                    </div>
+                    </div> -->
                  
                     <div class="stat-card">
                         <div class="stat-number" id="total-protein">0</div>
@@ -793,7 +925,6 @@
                         <div class="stat-label">Carboidrati (g)</div>
                     </div>
                 </div>
-                -->
             </div>
         </div>
     </div>
@@ -801,7 +932,7 @@
     <!-- Firebase SDK -->
     <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, onSnapshot, query, where } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js'; // <-- Aggiunti 'query' e 'where' qui
+    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, onSnapshot, query, where, updateDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
 
 
@@ -829,6 +960,9 @@
         let currentDayFilter = 'all';
         let currentFoodDayFilter = 'all';
         let currentUser;
+        let currentSessionDay = null;
+        let sessionExercises = [];
+        let completedExercises = [];
 
 
         // Funzioni di autenticazione
@@ -997,6 +1131,316 @@
             }
         }
 
+
+        window.loadSessionDay = async function(day) {
+    currentSessionDay = day;
+    
+    // Aggiorna l'interfaccia del giorno selezionato
+    document.querySelectorAll('.day-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    // Filtra gli esercizi per il giorno selezionato
+    sessionExercises = exercises.filter(exercise => exercise.day === day)
+        .sort((a, b) => (a.order || 999) - (b.order || 999));
+    
+    // Carica lo stato di completamento salvato
+    completedExercises = await loadCompletedExercises(day);
+    
+    // Debug: mostra cosa è stato caricato
+    console.log('Caricato stato per', day, ':', completedExercises);
+    
+    // Aggiorna l'interfaccia
+    updateSessionProgress();
+    displaySessionExercises();
+    updateSessionDayText();
+    
+    // Mostra il pulsante reset se ci sono esercizi completati
+    if (completedExercises.length > 0) {
+        document.getElementById('reset-session-btn').classList.remove('hidden');
+    } else {
+        document.getElementById('reset-session-btn').classList.add('hidden');
+    }
+}
+
+
+
+function updateSessionDayText() {
+    const dayText = document.getElementById('session-day-text');
+    if (currentSessionDay) {
+        dayText.textContent = `Allenamento di ${getDayName(currentSessionDay)}`;
+    } else {
+        dayText.textContent = 'Seleziona il giorno di allenamento';
+    }
+}
+
+async function saveCompletedExercises(day, completedIds) {
+    if (!currentUser) return;
+    
+    try {
+        const sessionData = {
+            userId: currentUser.uid,
+            day: day,
+            completedExercises: completedIds,
+            lastUpdated: new Date(),
+            timestamp: new Date()
+        };
+        
+        // Cerca se esiste già una sessione per questo giorno
+        const q = query(
+            collection(db, 'sessions'), 
+            where("userId", "==", currentUser.uid),
+            where("day", "==", day)
+        );
+        
+        const querySnapshot = await getDocs(q);
+        
+        if (querySnapshot.empty) {
+            // Crea una nuova sessione
+            await addDoc(collection(db, 'sessions'), sessionData);
+        } else {
+            // Aggiorna la sessione esistente
+            const docRef = querySnapshot.docs[0].ref;
+            await updateDoc(docRef, {
+                completedExercises: completedIds,
+                lastUpdated: new Date()
+            });
+        }
+        
+        console.log('Stato sessione salvato per', day);
+    } catch (error) {
+        console.error('Errore nel salvare lo stato della sessione:', error);
+    }
+}
+async function loadCompletedExercises(day) {
+    if (!currentUser) return [];
+    
+    try {
+        const q = query(
+            collection(db, 'sessions'), 
+            where("userId", "==", currentUser.uid),
+            where("day", "==", day)
+        );
+        
+        const querySnapshot = await getDocs(q);
+        
+        if (!querySnapshot.empty) {
+            const sessionData = querySnapshot.docs[0].data();
+            return sessionData.completedExercises || [];
+        }
+        
+        return [];
+    } catch (error) {
+        console.error('Errore nel caricare lo stato della sessione:', error);
+        return [];
+    }
+}
+
+async function resetSessionInDatabase(day) {
+    if (!currentUser) return;
+    
+    try {
+        const q = query(
+            collection(db, 'sessions'), 
+            where("userId", "==", currentUser.uid),
+            where("day", "==", day)
+        );
+        
+        const querySnapshot = await getDocs(q);
+        
+        if (!querySnapshot.empty) {
+            // Invece di eliminare il documento, aggiorna con array vuoto
+            const docRef = querySnapshot.docs[0].ref;
+            await updateDoc(docRef, {
+                completedExercises: [],
+                lastUpdated: new Date()
+            });
+            console.log('Sessione resettata per', day);
+        }
+    } catch (error) {
+        console.error('Errore nel resettare la sessione:', error);
+    }
+}
+
+
+function displaySessionExercises() {
+    const container = document.getElementById('session-exercises');
+    
+    if (!currentSessionDay) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">🏋️</div>
+                <p>Seleziona un giorno per iniziare la tua sessione di allenamento!</p>
+            </div>
+        `;
+        return;
+    }
+    
+    if (sessionExercises.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">📝</div>
+                <p>Nessun esercizio programmato per ${getDayName(currentSessionDay)}.<br>Aggiungi alcuni esercizi nella sezione Allenamento!</p>
+            </div>
+        `;
+        return;
+    }
+    
+    let html = '';
+    sessionExercises.forEach(exercise => {
+        const isCompleted = completedExercises.includes(exercise.id);
+        html += createSessionExerciseHTML(exercise, isCompleted);
+    });
+    
+    container.innerHTML = html;
+}
+
+function createSessionExerciseHTML(exercise, isCompleted) {
+    const completedClass = isCompleted ? 'completed' : '';
+    const completedIcon = isCompleted ? '✅' : '⏳';
+    
+    return `
+        <div class="session-exercise-item ${completedClass}" onclick="toggleExerciseCompletion('${exercise.id}')">
+            <div class="exercise-header">
+                <div class="exercise-name">
+                    <span class="exercise-order-badge">#${exercise.order || '?'}</span>
+                    <span class="completion-icon">${completedIcon}</span>
+                    ${exercise.name}
+                </div>
+                <div class="exercise-status">
+                    ${isCompleted ? 'Completato' : 'In attesa'}
+                </div>
+            </div>
+            <div class="exercise-details">
+                ${exercise.sets} serie × ${exercise.reps} ripetizioni
+                ${isCompleted ? '<br><small style="color: #34C759;">✅ Esercizio completato!</small>' : '<br><small>Tocca per segnare come completato</small>'}
+            </div>
+        </div>
+    `;
+}
+window.toggleExerciseCompletion = async function(exerciseId) {
+    const index = completedExercises.indexOf(exerciseId);
+    
+    if (index > -1) {
+        // Rimuovi dalla lista dei completati
+        completedExercises.splice(index, 1);
+    } else {
+        // Aggiungi alla lista dei completati
+        completedExercises.push(exerciseId);
+    }
+    
+    // Salva lo stato nel database
+    await saveCompletedExercises(currentSessionDay, completedExercises);
+    
+    // Aggiorna l'interfaccia
+    updateSessionProgress();
+    displaySessionExercises();
+    
+    // Mostra messaggio di congratulazioni se tutti gli esercizi sono completati
+    if (completedExercises.length === sessionExercises.length && sessionExercises.length > 0) {
+        showCompletionMessage();
+    }
+    
+    // Mostra/nascondi il pulsante reset
+    const resetBtn = document.getElementById('reset-session-btn');
+    if (completedExercises.length > 0) {
+        resetBtn.classList.remove('hidden');
+    } else {
+        resetBtn.classList.add('hidden');
+    }
+}
+
+
+    function updateSessionProgress() {
+    const totalExercises = sessionExercises.length;
+    const completedCount = completedExercises.length;
+    const progressPercentage = totalExercises > 0 ? (completedCount / totalExercises) * 100 : 0;
+    
+    // Aggiorna il testo del progresso
+    document.getElementById('session-progress-text').textContent = 
+        `${completedCount} / ${totalExercises} esercizi completati`;
+    
+    // Aggiorna la barra di progresso
+    const progressFill = document.getElementById('session-progress-fill');
+    if (progressFill) {
+        progressFill.style.width = `${progressPercentage}%`;
+    }
+}
+
+// Mostra messaggio di congratulazioni
+function showCompletionMessage() {
+    const container = document.getElementById('session-exercises');
+    const congratsMessage = document.createElement('div');
+    congratsMessage.className = 'completion-message';
+    congratsMessage.innerHTML = `
+        <div style="
+            background: linear-gradient(135deg, #34C759, #30D158);
+            color: white;
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+            margin: 20px 0;
+            animation: fadeIn 0.5s ease;
+        ">
+            <div style="font-size: 48px; margin-bottom: 12px;">🎉</div>
+            <h3 style="margin: 0 0 8px 0; font-size: 20px;">Complimenti!</h3>
+            <p style="margin: 0; font-size: 16px; opacity: 0.9;">
+                Hai completato tutti gli esercizi di ${getDayName(currentSessionDay)}!
+            </p>
+        </div>
+    `;
+    
+    container.appendChild(congratsMessage);
+    
+    // Rimuovi il messaggio dopo 5 secondi
+    setTimeout(() => {
+        if (congratsMessage.parentNode) {
+            congratsMessage.remove();
+        }
+    }, 5000);
+}
+
+// Reset della sessione
+window.resetSession = async function() {
+    if (confirm('Sei sicuro di voler resettare la sessione? Tutti i progressi verranno cancellati.')) {
+        // Resetta nel database
+        await resetSessionInDatabase(currentSessionDay);
+        
+        // Resetta localmente
+        completedExercises = [];
+        
+        // Debug: conferma che l'array è vuoto
+        console.log('Dopo reset - completedExercises:', completedExercises);
+        
+        // Aggiorna l'interfaccia
+        updateSessionProgress();
+        displaySessionExercises();
+        document.getElementById('reset-session-btn').classList.add('hidden');
+        
+        // Mostra messaggio di reset
+        showError('Sessione resettata con successo');
+    }
+}
+
+// Aggiorna la sessione quando vengono caricati nuovi esercizi
+function updateSessionAfterExerciseLoad() {
+    if (currentSessionDay) {
+        // Ricarica gli esercizi per il giorno corrente
+        sessionExercises = exercises.filter(exercise => exercise.day === currentSessionDay)
+            .sort((a, b) => (a.order || 999) - (b.order || 999));
+        
+        // Pulisci gli esercizi completati che non esistono più
+        completedExercises = completedExercises.filter(id => 
+            sessionExercises.some(exercise => exercise.id === id)
+        );
+        
+        // Aggiorna l'interfaccia
+        updateSessionProgress();
+        displaySessionExercises();
+    }
+}
+
         // Funzioni Firebase per alimenti
         async function loadFoods() {
     if (!currentUser) return; // Ensure user is logged in
@@ -1010,7 +1454,7 @@
             foods.push({ id: doc.id, ...doc.data() });
         });
         displayFoods();
-        //updateDietStats();
+        updateDietStats();
     } catch (error) {
         console.error('Errore nel caricamento alimenti:', error);
         showError('Errore nel caricamento degli alimenti');
@@ -1018,6 +1462,7 @@
         showLoading(false);
     }
 }
+
 
         async function saveFood(food) {
     if (!currentUser) return; // Ensure user is logged in
@@ -1032,7 +1477,7 @@
         food.id = docRef.id;
         foods.push(food);
         displayFoods();
-        //updateDietStats();
+        updateDietStats();
         clearFoodForm();
     } catch (error) {
         console.error('Errore nel salvare alimento:', error);
@@ -1047,7 +1492,7 @@
                 await deleteDoc(doc(db, 'foods', id));
                 foods = foods.filter(food => food.id !== id);
                 displayFoods();
-                //updateDietStats();
+                updateDietStats();
             } catch (error) {
                 console.error('Errore nell\'eliminare alimento:', error);
                 showError('Errore nell\'eliminare l\'alimento');
@@ -1321,7 +1766,7 @@ function createFoodHTML(food) {
                 <button class="btn btn-danger" onclick="removeFood('${food.id}')">Rimuovi</button>
             </div>
             <div class="food-details">
-                ${food.quantity}g • ${food.pasto} 
+                ${food.quantity}g • ${food.pasto} • proteine ${food.protein} • cairbodrati ${food.carbs}
                 <br><small>Aggiunto il: ${food.date}</small>
             </div>
         </div>
@@ -1352,13 +1797,13 @@ function createFoodHTML(food) {
         }
 
 //Pensare ad una funziona utile
-    //function updateDietStats() {
-    //const totalProtein = foods.reduce((sum, food) => sum + food.protein, 0);
-    //const totalCarbs = foods.reduce((sum, food) => sum + food.carbs, 0);
+    function updateDietStats() {
+    const totalProtein = foods.reduce((sum, food) => sum + food.protein, 0);
+    const totalCarbs = foods.reduce((sum, food) => sum + food.carbs, 0);
 
-    //document.getElementById('total-protein').textContent = totalProtein.toFixed(1);
-    //document.getElementById('total-carbs').textContent = totalCarbs.toFixed(1);
-//}
+    document.getElementById('total-protein').textContent = totalProtein.toFixed(1);
+    document.getElementById('total-carbs').textContent = totalCarbs.toFixed(1);
+}
 
        function clearExerciseForm() {
     document.getElementById('exercise-day').value = '';
