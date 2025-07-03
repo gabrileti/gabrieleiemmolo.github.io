@@ -183,7 +183,7 @@
             transition: all 0.2s ease;
         }
 
-        const sessionStyles = `
+        
     .session-progress {
         background: rgba(28, 28, 30, 0.8);
         backdrop-filter: blur(20px);
@@ -277,7 +277,7 @@
         from { opacity: 0; transform: translateY(10px); }
         to { opacity: 1; transform: translateY(0); }
     }
-`;
+
 
 
         .logout-btn:hover {
@@ -718,8 +718,7 @@
     <div class="container">
         <!-- Schermata di Login -->
         <div id="auth-screen" class="auth-container">
-        <h2 class="auth-title"><img src="images/Logo.png" alt="Il Mio Logo" style="height: 100px; width: auto;"></h2>
-            <div id="login-section">
+            <h2 class="auth-title"><img src="images/Logo.png" alt="Il Mio Logo" style="height: 80px; width: auto;"></h2>            <div id="login-section">
                 <h3 style="margin-bottom: 20px; color: #8E8E93; font-weight: 500; text-align: center;">Accedi al tuo account</h3>
                 <div class="auth-form">
                     <input type="email" id="login-email" class="auth-input" placeholder="Email" required>
@@ -744,6 +743,7 @@
                 </div>
             </div>
         </div>
+
         <!-- App principale -->
         <div id="main-app" class="hidden">
             <div class="header">
@@ -761,9 +761,10 @@
 
             <div class="tabs">
                 <button class="tab-btn" onclick="showTab('session')">⚡ Sessione</button>
-                <button class="tab-btn active" onclick="showTab('workout')"><img src="images/logo_palestra.png" alt="Palestra" style="height: 16px; width: auto; margin-right: 5px;"> Allenamento</button>
+                <button class="tab-btn active" onclick="showTab('workout')"><img src="images/logo_palestra.png" alt="Allenamento" style="height: 16px; width: auto; margin-right: 5px;"> Allenamento</button>
                 <button class="tab-btn" onclick="showTab('diet')">🥗 Dieta</button>
             </div>
+
             <div id="session-tab" class="tab-content">
                 <div class="session-progress">
                     <div class="progress-text" id="session-progress-text">0 / 0 esercizi completati</div>
@@ -785,6 +786,7 @@
                         <button class="day-btn" onclick="loadSessionDay('domenica')">Dom</button>
                     </div>
                 </div>
+
                 <div class="section-card">
                     <h2 class="section-title">🎯 Esercizi di Oggi</h2>
                     <div id="session-exercises">
@@ -796,6 +798,7 @@
                     <button id="reset-session-btn" class="btn btn-reset hidden" onclick="resetSession()">🔄 Reset Sessione</button>
                 </div>
             </div>
+
             <!-- Sezione Allenamento -->
             <div id="workout-tab" class="tab-content active">
                 <div class="section-card">
@@ -820,6 +823,7 @@
                         <button id="add-exercise-btn" class="btn btn-primary" onclick="addExercise()">Aggiungi Esercizio</button>
                     </div>
                 </div>
+
                 <div class="section-card">
                     <h2 class="section-title">📊 La tua scheda</h2>
                     
@@ -1393,7 +1397,7 @@ function showCompletionMessage() {
         if (congratsMessage.parentNode) {
             congratsMessage.remove();
         }
-    }, 5000);
+    }, 6000);
 }
 
 // Reset della sessione
@@ -1867,4 +1871,4 @@ function createFoodHTML(food) {
 
     </script>
 </body>
-</html>
+</html>    
