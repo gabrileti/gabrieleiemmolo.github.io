@@ -193,6 +193,15 @@
         border: 1px solid rgba(255, 255, 255, 0.1);
         text-align: center;
     }
+    .dietsession-progress {
+        background: rgba(28, 28, 30, 0.8);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 24px;
+        margin-bottom: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        text-align: center;
+    }
 
     .progress-text {
         font-size: 24px;
@@ -761,10 +770,11 @@
 
             <div class="tabs">
                 <button class="tab-btn" onclick="showTab('session')">⚡ Sessione</button>
-                <button class="tab-btn active" onclick="showTab('workout')"><img src="images/logo_palestra.png" alt="Allenamento" style="height: 16px; width: auto; margin-right: 5px;"> Allenamento</button>
+                <button class="tab-btn active" onclick="showTab('workout')"><img src="images/logo_palestra.png" alt="Allenamento" style="height: 16px; width: auto; margin-right: 5px;"> Scheda</button>
                 <button class="tab-btn" onclick="showTab('diet')">🥗 Dieta</button>
+                <button class="tab-btn" onclick="showTab('dietsession')">📊 Dieta oggi </button>
             </div>
-
+<!-- sessione allenamento giornaliera-->
             <div id="session-tab" class="tab-content">
                 <div class="session-progress">
                     <div class="progress-text" id="session-progress-text">0 / 0 esercizi completati</div>
@@ -796,6 +806,41 @@
                         </div>
                     </div>
                     <button id="reset-session-btn" class="btn btn-reset hidden" onclick="resetSession()">🔄 Reset Sessione</button>
+                </div>
+            </div>
+            
+            <!-- dieta giornaliera-->
+            <div id="dietsession-tab" class="tab-content">
+                <div class="dietsession-progress">
+                    <div class="progress-text" id="diet-progress-text">0 / 0 esercizi completati</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="diet-progress-fill"></div>
+                    </div>
+                    <div class="progress-subtitle" id="dietsession-day-text">Seleziona il giorno di allenamento</div>
+                </div>
+
+                <div class="section-card">
+                    <h2 class="section-title">📅 Seleziona Giorno</h2>
+                    <div class="day-filter">
+                        <button class="day-btn" onclick="loadDietSessionDay('lunedi')">Lun</button>
+                        <button class="day-btn" onclick="loadDietSessionDay('martedi')">Mar</button>
+                        <button class="day-btn" onclick="loadDietSessionDay('mercoledi')">Mer</button>
+                        <button class="day-btn" onclick="loadDietSessionDay('giovedi')">Gio</button>
+                        <button class="day-btn" onclick="loadDietSessionDay('venerdi')">Ven</button>
+                        <button class="day-btn" onclick="loadDietSessionDay('sabato')">Sab</button>
+                        <button class="day-btn" onclick="loadDietSessionDay('domenica')">Dom</button>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <h2 class="section-title">🥗 Dieta di Oggi</h2>
+                    <div id="session-diet">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">🍽️</div>
+                            <p>Seleziona un giorno per iniziare la tua dieta giornaliera</p>
+                        </div>
+                    </div>
+                    <button id="reset-diet-session-btn" class="btn btn-reset hidden" onclick="resetDietSession()">🔄 Reset Sessione</button>
                 </div>
             </div>
 
@@ -961,7 +1006,9 @@
         let currentUser;
         let currentSessionDay = null;
         let sessionExercises = [];
+        let sessionFood = [];
         let completedExercises = [];
+        let completedFoods = [];
 
 
         // Funzioni di autenticazione
@@ -1163,8 +1210,38 @@
     }
 }
 
-
-
+window.loadDietSessionDay = async function(day) {
+    currentSessionDay = day;
+    
+    // Aggiorna l'interfaccia del giorno selezionato
+    document.querySelectorAll('.day-btn').forEach(btn => {saveCompletedDiet
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    // Filtra gli esercizi per il giorno selezionato
+    sessionFood = foods.filter(foods => foods.day === day)
+        .sort((a, b) => (a.order || 999) - (b.order || 999));
+    
+    // Carica lo stato di completamento salvato
+    completedFoods = await loadCompletedFoods(day);
+    
+    // Debug: mostra cosa è stato caricato
+    console.log('Caricato stato dieta  per', day, ':', completedFoods);
+    
+    // Aggiorna l'interfaccia
+    updateDietProgress();
+    displaySessionFood();
+    updateDietDayText();
+    
+    // Mostra il pulsante reset se ci sono esercizi completati
+    if (completedFoods.length > 0) {
+        document.getElementById('reset-diet-session-btn').classList.remove('hidden');
+    } else {
+        document.getElementById('reset-diet-session-btn').classList.add('hidden');
+    }
+}
+//partono gli update
 function updateSessionDayText() {
     const dayText = document.getElementById('session-day-text');
     if (currentSessionDay) {
@@ -1174,6 +1251,16 @@ function updateSessionDayText() {
     }
 }
 
+function updateDietDayText() {
+    const dayText = document.getElementById('dietsession-day-text');
+    if (currentSessionDay) {
+        dayText.textContent = `dieta di ${getDayName(currentSessionDay)}`;
+    } else {
+        dayText.textContent = 'Seleziona il giorno di dieta';
+    }
+}
+
+//salvataggio dei record completati
 async function saveCompletedExercises(day, completedIds) {
     if (!currentUser) return;
     
@@ -1196,7 +1283,7 @@ async function saveCompletedExercises(day, completedIds) {
         const querySnapshot = await getDocs(q);
         
         if (querySnapshot.empty) {
-            // Crea una nuova sessione
+            // Crea una nuova sessionef
             await addDoc(collection(db, 'sessions'), sessionData);
         } else {
             // Aggiorna la sessione esistente
@@ -1212,6 +1299,47 @@ async function saveCompletedExercises(day, completedIds) {
         console.error('Errore nel salvare lo stato della sessione:', error);
     }
 }
+
+async function saveCompletedDiet(day, completedIdsDiet) {
+    if (!currentUser) return;
+    
+    try {
+        const sessionFoodData = {
+            userId: currentUser.uid,
+            day: day,
+            completedFoods: completedIdsDiet,
+            lastUpdated: new Date(),
+            timestamp: new Date()
+        };
+        
+        // Cerca se esiste già una sessione per questo giorno
+        const q = query(
+            collection(db, 'sessionsdiet'), 
+            where("userId", "==", currentUser.uid),
+            where("day", "==", day)
+        );
+        
+        const querySnapshot = await getDocs(q);
+        
+        if (querySnapshot.empty) {
+            // Crea una nuova sessione
+            await addDoc(collection(db, 'sessionsdiet'), sessionFoodData);
+        } else {
+            // Aggiorna la sessione esistente
+            const docRef = querySnapshot.docs[0].ref;
+            await updateDoc(docRef, {
+                completedFoods: completedIdsDiet,
+                lastUpdated: new Date()
+            });
+        }
+        
+        console.log('Stato sessione salvato per', day);
+    } catch (error) {
+        console.error('Errore nel salvare lo stato della sessione:', error);
+    }
+}
+//caricamento degli esercizi completati
+
 async function loadCompletedExercises(day) {
     if (!currentUser) return [];
     
@@ -1235,6 +1363,30 @@ async function loadCompletedExercises(day) {
         return [];
     }
 }
+async function loadCompletedFoods(day) {
+    if (!currentUser) return [];
+    
+    try {
+        const q = query(
+            collection(db, 'sessionsdiet'), 
+            where("userId", "==", currentUser.uid),
+            where("day", "==", day)
+        );
+        
+        const querySnapshot = await getDocs(q);
+        
+        if (!querySnapshot.empty) {
+            const sessionFoodData = querySnapshot.docs[0].data();
+            return sessionFoodData.completedFoods || [];
+        }
+        
+        return [];
+    } catch (error) {
+        console.error('Errore nel caricare lo stato della sessione:', error);
+        return [];
+    }
+}
+
 
 async function resetSessionInDatabase(day) {
     if (!currentUser) return;
@@ -1253,6 +1405,32 @@ async function resetSessionInDatabase(day) {
             const docRef = querySnapshot.docs[0].ref;
             await updateDoc(docRef, {
                 completedExercises: [],
+                lastUpdated: new Date()
+            });
+            console.log('Sessione resettata per', day);
+        }
+    } catch (error) {
+        console.error('Errore nel resettare la sessione:', error);
+    }
+}
+
+async function resetDietSessionInDatabase(day) {
+    if (!currentUser) return;
+    
+    try {
+        const q = query(
+            collection(db, 'sessionsdiet'), 
+            where("userId", "==", currentUser.uid),
+            where("day", "==", day)
+        );
+        
+        const querySnapshot = await getDocs(q);
+        
+        if (!querySnapshot.empty) {
+            // Invece di eliminare il documento, aggiorna con array vuoto
+            const docRef = querySnapshot.docs[0].ref;
+            await updateDoc(docRef, {
+                completedFoods: [],
                 lastUpdated: new Date()
             });
             console.log('Sessione resettata per', day);
@@ -1318,6 +1496,64 @@ function createSessionExerciseHTML(exercise, isCompleted) {
         </div>
     `;
 }
+
+function displaySessionFood() {
+    const container = document.getElementById('session-diet');
+    
+    if (!currentSessionDay) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">🏋️</div>
+                <p>Seleziona un giorno per iniziare la tua sessione di dieta!</p>
+            </div>
+        `;
+        return;
+    }
+    
+    if (sessionFood.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">📝</div>
+                <p>Nessun pasto programmatato per ${getDayName(currentSessionDay)}.<br>Aggiungi alcuni pasti nella sezione Dieta!</p>
+            </div>
+        `;
+        return;
+    }
+    
+    let html = '';
+    sessionFood.forEach(food => {
+        const isCompleted = completedFoods.includes(food.id);
+        html += createSessionFoodHTML(food, isCompleted);
+    });
+    
+    container.innerHTML = html;
+}
+
+function createSessionFoodHTML(foods, isCompleted) {
+    const completedClass = isCompleted ? 'completed' : '';
+    const completedIcon = isCompleted ? '✅' : '⏳';
+    
+    return `
+        <div class="session-exercise-item ${completedClass}" onclick="toggleDietCompletion('${foods.id}')">
+            <div class="diet-header">
+                <div class="food-name">
+                    <span class="completion-icon">${completedIcon}</span>
+                    ${foods.name}
+                </div>
+                <div class="exercise-status">
+                    ${isCompleted ? 'Completato' : 'In attesa'}
+                </div>
+            </div>
+            <div class="exercise-details">
+                ${foods.quantity} grammi | Da mangiare per ${foods.pasto} 
+                ${isCompleted ? '<br><small style="color: #34C759;">✅Pasto completato!</small>' : '<br><small>Tocca per segnare come completato</small>'}
+            </div>
+        </div>
+    `;
+}
+
+
+
 window.toggleExerciseCompletion = async function(exerciseId) {
     const index = completedExercises.indexOf(exerciseId);
     
@@ -1350,6 +1586,36 @@ window.toggleExerciseCompletion = async function(exerciseId) {
     }
 }
 
+window.toggleDietCompletion = async function(foodId) {
+    const index = completedFoods.indexOf(foodId);
+    
+    if (index > -1) {
+        completedFoods.splice(index, 1);
+    } else {
+        completedFoods.push(foodId);
+    }
+    
+    // Salva lo stato nel database
+    await saveCompletedDiet(currentSessionDay, completedFoods);
+    
+    // Aggiorna l'interfaccia
+    updateDietProgress();
+    displaySessionFood(); // ✅ Corretto nome funzione
+    
+    // Mostra messaggio di congratulazioni se tutti i pasti sono completati
+    if (completedFoods.length === sessionFood.length && sessionFood.length > 0) {
+        showDietCompletionMessage(); // ✅ Funzione specifica per la dieta
+    }
+    
+    // Mostra/nascondi il pulsante reset
+    const resetBtn = document.getElementById('reset-diet-session-btn');
+    if (completedFoods.length > 0) {
+        resetBtn.classList.remove('hidden');
+    } else {
+        resetBtn.classList.add('hidden');
+    }
+}
+
 
     function updateSessionProgress() {
     const totalExercises = sessionExercises.length;
@@ -1362,6 +1628,22 @@ window.toggleExerciseCompletion = async function(exerciseId) {
     
     // Aggiorna la barra di progresso
     const progressFill = document.getElementById('session-progress-fill');
+    if (progressFill) {
+        progressFill.style.width = `${progressPercentage}%`;
+    }
+}
+
+   function updateDietProgress() {
+    const totalFood = sessionFood.length;
+    const completedCount = completedFoods.length;
+    const progressPercentage = totalFood > 0 ? (completedCount / totalFood) * 100 : 0;
+    
+    // Aggiorna il testo del progresso
+    document.getElementById('diet-progress-text').textContent = 
+        `${completedCount} / ${totalFood} dieta  completata`;
+    
+    // Aggiorna la barra di progresso
+    const progressFill = document.getElementById('diet-progress-fill');
     if (progressFill) {
         progressFill.style.width = `${progressPercentage}%`;
     }
@@ -1400,6 +1682,37 @@ function showCompletionMessage() {
     }, 6000);
 }
 
+function showDietCompletionMessage() {
+    const container = document.getElementById('session-diet');
+    const congratsMessage = document.createElement('div');
+    congratsMessage.className = 'completion-message';
+    congratsMessage.innerHTML = `
+        <div style="
+            background: linear-gradient(135deg, #34C759, #30D158);
+            color: white;
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+            margin: 20px 0;
+            animation: fadeIn 0.5s ease;
+        ">
+            <div style="font-size: 48px; margin-bottom: 12px;">🎉</div>
+            <h3 style="margin: 0 0 8px 0; font-size: 20px;">Complimenti!</h3>
+            <p style="margin: 0; font-size: 16px; opacity: 0.9;">
+                Hai completato tutti i pasti di ${getDayName(currentSessionDay)}!
+            </p>
+        </div>
+    `;
+    
+    container.appendChild(congratsMessage);
+    
+    setTimeout(() => {
+        if (congratsMessage.parentNode) {
+            congratsMessage.remove();
+        }
+    }, 6000);
+}   
+
 // Reset della sessione
 window.resetSession = async function() {
     if (confirm('Sei sicuro di voler resettare la sessione? Tutti i progressi verranno cancellati.')) {
@@ -1422,6 +1735,23 @@ window.resetSession = async function() {
     }
 }
 
+// Reset della sessione
+window.resetDietSession = async function() {
+    if (confirm('Sei sicuro di voler resettare la sessione dieta? Tutti i progressi verranno cancellati.')) {
+        await resetDietSessionInDatabase(currentSessionDay);
+        
+        completedFoods = [];
+        
+        console.log('Dopo reset - completedFoods:', completedFoods);
+        
+        updateDietProgress();
+        displaySessionFood();
+        document.getElementById('reset-diet-session-btn').classList.add('hidden');
+        
+        showError('Sessione dieta resettata con successo');
+    }
+}
+
 // Aggiorna la sessione quando vengono caricati nuovi esercizi
 function updateSessionAfterExerciseLoad() {
     if (currentSessionDay) {
@@ -1437,6 +1767,24 @@ function updateSessionAfterExerciseLoad() {
         // Aggiorna l'interfaccia
         updateSessionProgress();
         displaySessionExercises();
+    }
+}
+
+// Aggiorna la sessione quando vengono caricati nuovi esercizi
+function updateSessionAfterFoodLoad() {
+    if (currentSessionDay) {
+        // Ricarica gli esercizi per il giorno corrente
+        sessionFood = foods.filter(food => food.day === currentSessionDay)
+            .sort((a, b) => (a.order || 999) - (b.order || 999));
+        
+        // Pulisci gli esercizi completati che non esistono più
+        completedFoods = completedFoods.filter(id => 
+            sessionFood.some(food => food.id === id)
+        );
+        
+        // Aggiorna l'interfaccia
+        updateDietProgress();
+        displaySessionFood();
     }
 }
 
@@ -1871,4 +2219,4 @@ function createFoodHTML(food) {
 
     </script>
 </body>
-</html>    
+</html>
