@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -666,6 +667,72 @@
             text-align: center;
         }
 
+        /* Sidebar stile iOS */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -260px;
+    width: 240px;
+    height: 100%;
+    background: rgba(28,28,30,0.98);
+    box-shadow: 2px 0 16px rgba(0,0,0,0.18);
+    z-index: 2000;
+    transition: left 0.25s cubic-bezier(.4,0,.2,1);
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+.sidebar.open {
+    left: 0;
+}
+.sidebar-header {
+    padding: 24px 20px 12px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    color: #fff;
+    background: none;
+}
+.sidebar-content {
+    padding: 18px 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.sidebar-link {
+    display: block;
+    padding: 14px 28px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 17px;
+    border-radius: 8px;
+    transition: background 0.18s;
+}
+.sidebar-link:hover {
+    background: #7700ff;
+    color: #fff;
+}
+.sidebar-open-btn {
+    position: fixed;
+    top: 20px;
+    left: 16px;
+    z-index: 2100;
+    background: rgba(44,44,46,0.8);
+    color: #fff;
+    padding: 12px 18px;
+    font-size: 22px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: background 0.2s;
+}
+.sidebar-open-btn:active {
+    background: #7700ff;
+}
+@media (max-width: 480px) {
+    .sidebar { width: 90vw; min-width: 180px; }
+}
+
         /* iOS Safe Area */
         @supports (padding-top: env(safe-area-inset-top)) {
             .header {
@@ -724,6 +791,30 @@
     </style>
 </head>
 <body>
+    <!-- Menu a tendina in alto a sinistra -->
+    <div style="position: fixed; top: 20px; left: 16px; z-index: 100;">
+        <div class="dropdown">
+            <button class="dropbtn" id="menuDropdownBtn">☰</button>
+            <div class="dropdown-content" id="menuDropdownContent">
+                <a href="#" id="storico-link">Storico Allenamenti</a>
+            </div>
+        </div>
+    </div>
+
+<!-- Sidebar per il menu -->
+<div id="sidebar-menu" class="sidebar">
+    <div class="sidebar-header">
+        <span style="font-weight:700;font-size:20px;">Menu</span>
+        <button id="closeSidebarBtn" style="background:none;border:none;font-size:28px;color:#fff;float:right;cursor:pointer;">&times;</button>
+    </div>
+    <div class="sidebar-content">
+        <a href="#" id="sidebar-storico-link" class="sidebar-link">📈 Storico Allenamenti</a>
+        <!-- Puoi aggiungere altre voci qui -->
+    </div>
+</div>
+<!-- Pulsante per aprire la sidebar -->
+<button id="openSidebarBtn" class="sidebar-open-btn">☰</button>
+
     <div class="container">
         <!-- Schermata di Login -->
         <div id="auth-screen" class="auth-container">
@@ -753,8 +844,119 @@
             </div>
         </div>
 
-        <!-- App principale -->
-        <div id="main-app" class="hidden">
+
+
+ <div class="container">
+    <!-- Schermata di Login -->
+    <div id="auth-screen" class="auth-container">
+        <!-- ...login code... -->
+    </div>
+
+    <!-- Storico Allenamenti (SPOSTATO FUORI da #main-app) -->
+    <div id="storico-tab" class="tab-content" style="display:none; position:relative;">
+    <button id="btn-home" style="position:absolute; top:18px; right:18px; background:#7700ff; color:#fff; border:none; border-radius:10px; padding:10px 18px; font-size:16px; font-weight:600; cursor:pointer; z-index:10; box-shadow:0 2px 8px rgba(0,0,0,0.08);" onclick="goHome()">🏠 Home</button>
+    <div class="section-card">
+        <h2 class="section-title">📈 Storico Allenamenti</h2>
+        <div id="storico-mese"></div>
+        <div id="storico-settimana"></div>
+        <div id="storico-giorni"></div>
+        <div id="storico-list"></div>
+    </div>
+</div>       
+
+    <!-- App principale -->
+    <div id="main-app" class="hidden">
+    <script>
+    // Funzione per tornare alla home (tabs principali)
+    window.goHome = function() {
+        // Nascondi la pagina storico
+        document.getElementById('storico-tab').style.display = 'none';
+        document.getElementById('storico-tab').classList.remove('active');
+        // Mostra solo la home principale
+        document.getElementById('main-app').style.display = '';
+        // Non toccare le tab: l'utente può scegliere liberamente
+    }
+    </script>
+    <style>
+    /* Dropdown menu */
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+    .dropbtn {
+        background: rgba(44,44,46,0.8);
+        color: #fff;
+        padding: 12px 18px;
+        font-size: 22px;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        transition: background 0.2s;
+    }
+    .dropbtn:hover {
+        background: #7700ff;
+    }
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        left: 0;
+        background: #222;
+        min-width: 180px;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+        border-radius: 12px;
+        z-index: 101;
+    }
+    .dropdown-content a {
+        color: #fff;
+        padding: 14px 18px;
+        text-decoration: none;
+        display: block;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        border-radius: 12px 12px 0 0;
+        transition: background 0.2s;
+    }
+    .dropdown-content a:last-child {
+        border-bottom: none;
+    }
+    .dropdown-content a:hover {
+        background: #7700ff;
+    }
+    .dropdown.show .dropdown-content {
+        display: block;
+    }
+    </style>
+    <script>
+    // Gestione menu a tendina
+    document.addEventListener('DOMContentLoaded', function() {
+        const btn = document.getElementById('menuDropdownBtn');
+        const content = document.getElementById('menuDropdownContent');
+        // Aggiungi voce menu se non presente
+        if (!content.querySelector('a')) {
+            const a = document.createElement('a');
+            a.href = '#';
+            a.textContent = 'Storico Allenamenti';
+            a.onclick = function() { window.showStorico(); };
+            content.appendChild(a);
+        }
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            content.parentElement.classList.toggle('show');
+        });
+        document.addEventListener('click', function() {
+            content.parentElement.classList.remove('show');
+        });
+    });
+
+    
+
+    // Funzione per caricare lo storico da Firebase
+    
+
+    
+
+   
+    </script>
             <div class="header">
                 <div class="user-info">
                     <span>👋 Benvenuto, <span id="user-email"></span></span>
@@ -974,10 +1176,11 @@
     </div>
 
     <!-- Firebase SDK -->
-    <script type="module">
+    <script type="module" >
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
     import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, onSnapshot, query, where, updateDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
 
 
         // Configurazione Firebase
@@ -1041,6 +1244,7 @@
                 onAuthStateChanged(auth, (user) => {
                 if (user) {
                     currentUser = user; // ✅ Salva l'utente loggato
+                    window.currentUser = user; // <--- AGGIUNGI QUESTA RIGA
                     document.getElementById("login-section").style.display = "none";
                     document.getElementById("main-app").classList.remove("hidden");
                     document.getElementById("user-email").textContent = user.email;
@@ -1049,6 +1253,7 @@
                     loadFoods(); 
                 } else {
                     currentUser = null; // ❌ Nessun utente
+                    window.currentUser = null; // <--- AGGIUNGI QUESTA RIGA
                     document.getElementById("login-section").style.display = "block";
                     document.getElementById("main-app").classList.add("hidden");
                 }
@@ -1110,6 +1315,7 @@
                 container.innerHTML = '';
             }, 5000);
         }
+        window.showError = showError;
 
         function disableButton(buttonId, disabled) {
             const btn = document.getElementById(buttonId);
@@ -1163,7 +1369,208 @@
     } finally {
         disableButton('add-exercise-btn', false);
     }
+    }
+
+
+    async function loadExerciseHistory() {
+    if (!currentUser) return [];
+    try {
+        const q = query(collection(db, 'workout_history'), where('userId', '==', currentUser.uid));
+        const querySnapshot = await getDocs(q);
+        const history = [];
+        querySnapshot.forEach(doc => {
+            history.push({id: doc.id, ...doc.data()});
+        });
+        // Ordina per data decrescente
+        return history.sort((a, b) => {
+            const aDate = a.completedAt && a.completedAt.seconds ? a.completedAt.seconds * 1000 : new Date(a.completedAt).getTime();
+            const bDate = b.completedAt && b.completedAt.seconds ? b.completedAt.seconds * 1000 : new Date(b.completedAt).getTime();
+            return bDate - aDate;
+        });
+        } catch (error) {
+        showError('Errore nel caricamento dello storico');
+        return [];
+    }
+    }
+
+
+    // Utility per ottenere mese/anno da una data
+function getMonthYear(date) {
+    const d = new Date(date.seconds ? date.seconds * 1000 : date);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
 }
+
+// Utility per ottenere la settimana del mese (1-5)
+function getWeekOfMonth(date) {
+    const d = new Date(date.seconds ? date.seconds * 1000 : date);
+    const firstDay = new Date(d.getFullYear(), d.getMonth(), 1);
+    return Math.ceil((d.getDate() + firstDay.getDay()) / 7);
+}
+
+// Mostra la selezione mese
+function showStorico() {
+    document.getElementById('main-app').style.display = 'none';
+    document.getElementById('storico-tab').style.display = 'block';
+    document.getElementById('storico-tab').classList.add('active');
+    showStoricoMese();
+}
+
+async function showStoricoMese() {
+    const history = await loadExerciseHistory();
+    const mesi = [...new Set(history.map(item => getMonthYear(item.completedAt)))];
+    let html = '<div style="margin-bottom:16px;">Seleziona mese:</div><div style="display:flex;gap:8px;flex-wrap:wrap;">';
+    mesi.forEach(mese => {
+        html += `<button class="btn btn-primary" onclick="window.showStoricoSettimana('${mese}')">${mese}</button>`;
+    });
+    html += '</div>';
+    document.getElementById('storico-mese').innerHTML = html;
+    document.getElementById('storico-settimana').innerHTML = '';
+    document.getElementById('storico-giorni').innerHTML = '';
+    document.getElementById('storico-list').innerHTML = '';
+}
+
+window.showStoricoSettimana = async function(mese) {
+    const history = await loadExerciseHistory();
+    const filtered = history.filter(item => getMonthYear(item.completedAt) === mese);
+    const settimane = [...new Set(filtered.map(item => getWeekOfMonth(item.completedAt)))].sort();
+    let html = '<div style="margin-bottom:16px;">Seleziona settimana:</div><div style="display:flex;gap:8px;flex-wrap:wrap;">';
+    settimane.forEach(sett => {
+        html += `<button class="btn btn-primary" onclick="window.showStoricoGiorni('${mese}',${sett})">Settimana ${sett}</button>`;
+    });
+    html += '</div>';
+    document.getElementById('storico-settimana').innerHTML = html;
+    document.getElementById('storico-giorni').innerHTML = '';
+    document.getElementById('storico-list').innerHTML = '';
+}
+
+window.showStoricoGiorni = async function(mese, settimana) {
+    const history = await loadExerciseHistory();
+    const filtered = history.filter(item => getMonthYear(item.completedAt) === mese && getWeekOfMonth(item.completedAt) === settimana);
+    const giorni = ['lunedi','martedi','mercoledi','giovedi','venerdi','sabato','domenica'];
+    let html = '<div style="margin-bottom:16px;">Seleziona giorno:</div><div class="day-filter">';
+    giorni.forEach(day => {
+        html += `<button class="day-btn" onclick="window.showStoricoList('${mese}',${settimana},'${day}')">${getDayName(day)}</button>`;
+    });
+    html += '</div>';
+    document.getElementById('storico-giorni').innerHTML = html;
+    document.getElementById('storico-list').innerHTML = '';
+}
+
+window.showStoricoList = async function(mese, settimana, day) {
+    const history = await loadExerciseHistory();
+    const filtered = history.filter(item =>
+        getMonthYear(item.completedAt) === mese &&
+        getWeekOfMonth(item.completedAt) === settimana &&
+        item.day === day
+    );
+    if (!filtered.length) {
+        document.getElementById('storico-list').innerHTML = `<div class="empty-state"><div class="empty-state-icon">📈</div><p>Nessun dato storico per questo giorno.</p></div>`;
+        return;
+    }
+    let html = '<ul style="list-style:none;padding:0;">';
+    filtered.forEach(item => {
+        let date;
+        if (item.completedAt && typeof item.completedAt === 'object' && 'seconds' in item.completedAt) {
+            date = new Date(item.completedAt.seconds * 1000).toLocaleString('it-IT');
+        } else if (typeof item.completedAt === 'string' || typeof item.completedAt === 'number') {
+            date = new Date(item.completedAt).toLocaleString('it-IT');
+        } else {
+            date = '-';
+        }
+        html += `
+        <li style="margin-bottom:18px;padding:16px 16px 38px 16px;background:rgba(44,44,46,0.7);border-radius:12px;position:relative;">
+            <div><b>${item.exerciseName}</b></div>
+            <div>Peso: <b id="peso-${item.id}">${item.weight} kg</b></div>
+            <div style="font-size:13px;color:#8E8E93;">${date}</div>
+            <button 
+                title="Modifica peso"
+                style="position:absolute;bottom:10px;left:10px;background:none;border:none;font-size:22px;cursor:pointer;color:#7700ff;"
+                onclick="window.editStoricoRecord('${item.id}', ${item.weight})"
+            >✏️</button>
+            <button 
+                title="Rimuovi record"
+                style="position:absolute;bottom:10px;right:10px;background:none;border:none;font-size:22px;cursor:pointer;color:#FF3B30;"
+                onclick="window.deleteStoricoRecord('${item.id}', '${mese}', ${settimana}, '${day}')"
+            >🗑️</button>
+        </li>`;
+    });
+    html += '</ul>';
+    document.getElementById('storico-list').innerHTML = html;
+}
+window.editStoricoRecord = async function(id, oldWeight) {
+    const nuovoPeso = prompt("Inserisci il nuovo peso (kg):", oldWeight);
+    if (nuovoPeso === null) return;
+    if (nuovoPeso === "" || isNaN(Number(nuovoPeso)) || Number(nuovoPeso) < 0) {
+        showError("Peso non valido");
+        return;
+    }
+    try {
+        await updateDoc(doc(db, "workout_history", id), { weight: Number(nuovoPeso) });
+        document.getElementById(`peso-${id}`).textContent = `${nuovoPeso} kg`;
+    } catch (e) {
+        showError("Errore durante la modifica del peso");
+    }
+};
+
+window.deleteStoricoRecord = async function(id, mese, settimana, day) {
+    if (!confirm("Sei sicuro di voler eliminare questo record dallo storico?")) return;
+    try {
+        await deleteDoc(doc(db, "workout_history", id));
+        // Ricarica la lista dopo l'eliminazione
+        window.showStoricoList(mese, settimana, day);
+    } catch (e) {
+        showError("Errore durante l'eliminazione del record");
+    }
+};
+
+
+// Rendi globale la funzione principale
+    window.showStorico = showStorico;
+
+    document.getElementById('storico-link').addEventListener('click', function(e) {
+        e.preventDefault();
+        showStorico();
+    });
+
+
+// Mostra lo storico nella sezione
+    async function displayExerciseHistory() {
+    const container = document.getElementById('storico-list');
+    container.innerHTML = '<div class="empty-state">Caricamento...</div>';
+    const history = await loadExerciseHistory();
+    if (!history.length) {
+        container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📈</div><p>Nessun dato storico ancora disponibile.</p></div>`;
+        return;
+    }
+    let html = '<ul style="list-style:none;padding:0;">';
+    history.forEach(item => {
+        let date;
+        if (item.completedAt && typeof item.completedAt === 'object' && 'seconds' in item.completedAt) {
+            date = new Date(item.completedAt.seconds * 1000).toLocaleString('it-IT');
+        } else if (typeof item.completedAt === 'string' || typeof item.completedAt === 'number') {
+            date = new Date(item.completedAt).toLocaleString('it-IT');
+        } else {
+            date = '-';
+        }
+        html += `<li style="margin-bottom:18px;padding:16px;background:rgba(44,44,46,0.7);border-radius:12px;">
+            <div><b>${item.exerciseName}</b> (${getDayName(item.day)})</div>
+            <div>Peso: <b>${item.weight} kg</b></div>
+            <div style="font-size:13px;color:#8E8E93;">${date}</div>
+        </li>`;
+    });
+    html += '</ul>';
+    container.innerHTML = html;
+}
+
+        window.showStorico = showStorico;
+
+
+window.db = db;
+window.query = query;
+window.collection = collection;
+window.where = where;
+window.getDocs = getDocs;
+
 
         async function deleteExercise(id) {
             try {
@@ -1553,30 +1960,66 @@ function createSessionFoodHTML(foods, isCompleted) {
 }
 
 
+// Funzione per salvare storico esercizio su Firebase
+    async function saveExerciseHistory({exerciseId, exerciseName, day, weight}) {
+        if (!currentUser) return;
+        try {
+            const historyData = {
+                userId: currentUser.uid,
+                exerciseId,
+                exerciseName,
+                day,
+                weight,
+                completedAt: new Date(),
+            };
+            await addDoc(collection(db, 'workout_history'), historyData);
+        } catch (error) {
+            showError('Errore nel salvataggio dello storico esercizio');
+        }
+    }
 
+
+
+// ...existing code...
 window.toggleExerciseCompletion = async function(exerciseId) {
     const index = completedExercises.indexOf(exerciseId);
-    
+    const exercise = sessionExercises.find(e => e.id === exerciseId);
+    if (!exercise) return;
     if (index > -1) {
         // Rimuovi dalla lista dei completati
         completedExercises.splice(index, 1);
     } else {
-        // Aggiungi alla lista dei completati
+        // Chiedi il peso usato
+        let peso = prompt(`Hai completato l'esercizio "${exercise.name}". Inserisci il peso usato (kg):`, "");
+        if (peso === null) return; // annullato
+        peso = peso.replace(',', '.');
+        if (peso === '' || isNaN(Number(peso)) || Number(peso) < 0) {
+            showError('Peso non valido');
+            return;
+        }
         completedExercises.push(exerciseId);
+        // Salva nello storico
+        await saveExerciseHistory({
+            exerciseId: exercise.id,
+            exerciseName: exercise.name,
+            day: exercise.day,
+            weight: Number(peso)
+        });
     }
-    
     // Salva lo stato nel database
     await saveCompletedExercises(currentSessionDay, completedExercises);
-    
+
+    // *** AGGIUNGI QUESTO: aggiorna l'array globale ***
+    completedExercises = [...completedExercises];
+
     // Aggiorna l'interfaccia
     updateSessionProgress();
     displaySessionExercises();
-    
+
     // Mostra messaggio di congratulazioni se tutti gli esercizi sono completati
     if (completedExercises.length === sessionExercises.length && sessionExercises.length > 0) {
         showCompletionMessage();
     }
-    
     // Mostra/nascondi il pulsante reset
     const resetBtn = document.getElementById('reset-session-btn');
     if (completedExercises.length > 0) {
@@ -1585,6 +2028,7 @@ window.toggleExerciseCompletion = async function(exerciseId) {
         resetBtn.classList.add('hidden');
     }
 }
+// ...existing code...
 
 window.toggleDietCompletion = async function(foodId) {
     const index = completedFoods.indexOf(foodId);
