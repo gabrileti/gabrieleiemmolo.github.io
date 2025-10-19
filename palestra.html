@@ -256,6 +256,27 @@
         font-size: 18px;
         margin-right: 8px;
     }
+    
+    /* NEW: Set Progress Indicator Styles */
+    .sets-progress {
+        display: flex;
+        gap: 6px;
+        margin-top: 12px;
+    }
+    .set-indicator {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        transition: all 0.2s ease;
+    }
+    .set-indicator.completed {
+        background: #34C759;
+        border-color: #34C759;
+        transform: scale(1.1);
+    }
+
 
     .exercise-status {
         font-size: 14px;
@@ -725,7 +746,6 @@
 </head>
 <body>
     <div class="container">
-        <!-- Schermata di Login -->
         <div id="auth-screen" class="auth-container">
             <h2 class="auth-title"><img src="images/Logo.png" alt="Il Mio Logo" style="height: 80px; width: auto;"></h2>            <div id="login-section">
                 <h3 style="margin-bottom: 20px; color: #8E8E93; font-weight: 500; text-align: center;">Accedi al tuo account</h3>
@@ -753,7 +773,6 @@
             </div>
         </div>
 
-        <!-- App principale -->
         <div id="main-app" class="hidden">
             <div class="header">
                 <div class="user-info">
@@ -774,8 +793,7 @@
                 <button class="tab-btn" onclick="showTab('diet')">🥗 Dieta</button>
                 <button class="tab-btn" onclick="showTab('dietsession')">📊 Dieta oggi </button>
             </div>
-<!-- sessione allenamento giornaliera-->
-            <div id="session-tab" class="tab-content">
+<div id="session-tab" class="tab-content">
                 <div class="session-progress">
                     <div class="progress-text" id="session-progress-text">0 / 0 esercizi completati</div>
                     <div class="progress-bar">
@@ -809,7 +827,6 @@
                 </div>
             </div>
             
-            <!-- dieta giornaliera-->
             <div id="dietsession-tab" class="tab-content">
                 <div class="dietsession-progress">
                     <div class="progress-text" id="diet-progress-text">0 / 0 esercizi completati</div>
@@ -844,7 +861,6 @@
                 </div>
             </div>
 
-            <!-- Sezione Allenamento -->
             <div id="workout-tab" class="tab-content active">
                 <div class="section-card">
                     <h2 class="section-title">🏋️ Aggiungi Esercizio</h2>
@@ -907,14 +923,13 @@
                 </div>
             </div>
 
-            <!-- Sezione Dieta -->
             <div id="diet-tab" class="tab-content">
                 <div class="section-card">
                     <h2 class="section-title">🥗 Aggiungi Alimento</h2>
                     <div class="form-group">
                         <div class="form-row diet">
                             <select id="food-day" class="form-control">
-                             <option value="">Seleziona giorno</option>
+                               <option value="">Seleziona giorno</option>
                                 <option value="lunedi">Lunedì</option>
                                 <option value="martedi">Martedì</option>
                                 <option value="mercoledi">Mercoledì</option>
@@ -922,7 +937,7 @@
                                 <option value="venerdi">Venerdì</option>
                                 <option value="sabato">Sabato</option>
                                 <option value="domenica">Domenica</option>   
-                            </select>         
+                            </select>        
                             <input type="text" id="food-name" class="form-control" placeholder="Nome alimento">
                             <input type="number" id="food-quantity" class="form-control" placeholder="Quantità (g)">
                             <input type="text" id="food-pasto" class="form-control" placeholder="Pasto">
@@ -955,11 +970,6 @@
                 </div>
 
                 <div class="stats-grid">
-                    <!-- <div class="stat-card">
-                        <div class="stat-number" id="tipo_di_pasto">0</div>
-                        <div class="stat-label">Calorie Totali</div>
-                    </div> -->
-                 
                     <div class="stat-card">
                         <div class="stat-number" id="total-protein">0</div>
                         <div class="stat-label">Proteine (g)</div>
@@ -973,7 +983,6 @@
         </div>
     </div>
 
-    <!-- Firebase SDK -->
     <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
     import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, onSnapshot, query, where, updateDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
@@ -1007,7 +1016,7 @@
         let currentSessionDay = null;
         let sessionExercises = [];
         let sessionFood = [];
-        let completedExercises = [];
+        // let completedSets = {};
         let completedFoods = [];
 
 
@@ -1024,37 +1033,37 @@
 
 
 
-                    window.loginUser = async function () {
-                    const email = document.getElementById("login-email").value;
-                    const password = document.getElementById("login-password").value;
+                        window.loginUser = async function () {
+                        const email = document.getElementById("login-email").value;
+                        const password = document.getElementById("login-password").value;
 
-                    try {
-                        await signInWithEmailAndPassword(auth, email, password);
-                        console.log("Login eseguito con successo");
-                        
-                    } catch (error) {
-                        console.error("Errore nel login:", error.message);
-                        alert("Email o password errati");
+                        try {
+                            await signInWithEmailAndPassword(auth, email, password);
+                            console.log("Login eseguito con successo");
+                            
+                        } catch (error) {
+                            console.error("Errore nel login:", error.message);
+                            alert("Email o password errati");
+                        }
+                    };
+
+                    onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        currentUser = user; // ✅ Salva l'utente loggato
+                        document.getElementById("auth-screen").classList.add("hidden");
+                        document.getElementById("main-app").classList.remove("hidden");
+                        document.getElementById("user-email").textContent = user.email;
+
+                        loadExercises();
+                        loadFoods(); 
+                    } else {
+                        currentUser = null; // ❌ Nessun utente
+                        document.getElementById("auth-screen").classList.remove("hidden");
+                        document.getElementById("main-app").classList.add("hidden");
                     }
-                };
+                });
 
-                onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    currentUser = user; // ✅ Salva l'utente loggato
-                    document.getElementById("login-section").style.display = "none";
-                    document.getElementById("main-app").classList.remove("hidden");
-                    document.getElementById("user-email").textContent = user.email;
-
-                    loadExercises();
-                    loadFoods(); 
-                } else {
-                    currentUser = null; // ❌ Nessun utente
-                    document.getElementById("login-section").style.display = "block";
-                    document.getElementById("main-app").classList.add("hidden");
-                }
-            });
-
-             window.registerUser = async function () {
+                   window.registerUser = async function () {
             const email = document.getElementById('register-email').value;
             const password = document.getElementById('register-password').value;
             const confirmPassword = document.getElementById('register-password-confirm').value;
@@ -1086,7 +1095,7 @@
         }
 
 
-         window.logoutUser = async function() {
+           window.logoutUser = async function() {
             try {
                 await signOut(auth);
             } catch (error) {
@@ -1120,25 +1129,25 @@
 
 
             async function loadExercises() {
-          if (!currentUser) return;
+            if (!currentUser) return;
         
-          try {
-            showLoading(true);
-            // ✅ Aggiungi questa riga per filtrare per userId
-            const q = query(collection(db, 'exercises'), where("userId", "==", currentUser.uid));
-            const querySnapshot = await getDocs(q);
-            exercises = [];
-            querySnapshot.forEach((doc) => {
-              exercises.push({ id: doc.id, ...doc.data() });
-            });
-            displayExercises();
-            updateWorkoutStats();
-          } catch (error) {
-            console.error('Errore nel caricamento esercizi:', error);
-            showError('Errore nel caricamento degli esercizi');
-          } finally {
-            showLoading(false);
-          }
+            try {
+                showLoading(true);
+                // ✅ Aggiungi questa riga per filtrare per userId
+                const q = query(collection(db, 'exercises'), where("userId", "==", currentUser.uid));
+                const querySnapshot = await getDocs(q);
+                exercises = [];
+                querySnapshot.forEach((doc) => {
+                    exercises.push({ id: doc.id, ...doc.data() });
+                });
+                displayExercises();
+                updateWorkoutStats();
+            } catch (error) {
+                console.error('Errore nel caricamento esercizi:', error);
+                showError('Errore nel caricamento degli esercizi');
+            } finally {
+                showLoading(false);
+            }
         }
 
         async function saveExercise(exercise) {
@@ -1179,62 +1188,45 @@
 
 
         window.loadSessionDay = async function(day) {
-    currentSessionDay = day;
-    
-    // Aggiorna l'interfaccia del giorno selezionato
-    document.querySelectorAll('.day-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    event.target.classList.add('active');
-    
-    // Filtra gli esercizi per il giorno selezionato
-    sessionExercises = exercises.filter(exercise => exercise.day === day)
-        .sort((a, b) => (a.order || 999) - (b.order || 999));
-    
-    // Carica lo stato di completamento salvato
-    completedExercises = await loadCompletedExercises(day);
-    
-    // Debug: mostra cosa è stato caricato
-    console.log('Caricato stato per', day, ':', completedExercises);
-    
-    // Aggiorna l'interfaccia
-    updateSessionProgress();
-    displaySessionExercises();
-    updateSessionDayText();
-    
-    // Mostra il pulsante reset se ci sono esercizi completati
-    if (completedExercises.length > 0) {
-        document.getElementById('reset-session-btn').classList.remove('hidden');
-    } else {
-        document.getElementById('reset-session-btn').classList.add('hidden');
-    }
-}
+            currentSessionDay = day;
+            
+            document.querySelectorAll('#session-tab .day-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            sessionExercises = exercises.filter(exercise => exercise.day === day)
+                .sort((a, b) => (a.order || 999) - (b.order || 999));
+            
+            // completedSets = await loadSessionState(day);
+            
+            updateSessionProgress();
+            displaySessionExercises();
+            updateSessionDayText();
+            
+            // const hasProgress = Object.values(completedSets).some(count => count > 0);
+            document.getElementById('reset-session-btn').classList.toggle('hidden', !hasProgress);
+        }
 
 window.loadDietSessionDay = async function(day) {
     currentSessionDay = day;
     
-    // Aggiorna l'interfaccia del giorno selezionato
-    document.querySelectorAll('.day-btn').forEach(btn => {saveCompletedDiet
+    document.querySelectorAll('#dietsession-tab .day-btn').forEach(btn => {
         btn.classList.remove('active');
     });
     event.target.classList.add('active');
     
-    // Filtra gli esercizi per il giorno selezionato
     sessionFood = foods.filter(foods => foods.day === day)
         .sort((a, b) => (a.order || 999) - (b.order || 999));
     
-    // Carica lo stato di completamento salvato
     completedFoods = await loadCompletedFoods(day);
     
-    // Debug: mostra cosa è stato caricato
-    console.log('Caricato stato dieta  per', day, ':', completedFoods);
+    console.log('Caricato stato dieta per', day, ':', completedFoods);
     
-    // Aggiorna l'interfaccia
     updateDietProgress();
     displaySessionFood();
     updateDietDayText();
     
-    // Mostra il pulsante reset se ci sono esercizi completati
     if (completedFoods.length > 0) {
         document.getElementById('reset-diet-session-btn').classList.remove('hidden');
     } else {
@@ -1260,20 +1252,17 @@ function updateDietDayText() {
     }
 }
 
-//salvataggio dei record completati
-async function saveCompletedExercises(day, completedIds) {
+// async function saveSessionState(day, setsData) {
     if (!currentUser) return;
     
     try {
-        const sessionData = {
+        const sessionDoc = {
             userId: currentUser.uid,
             day: day,
-            completedExercises: completedIds,
-            lastUpdated: new Date(),
-            timestamp: new Date()
+            completedSets: setsData, // Save the object
+            lastUpdated: new Date()
         };
         
-        // Cerca se esiste già una sessione per questo giorno
         const q = query(
             collection(db, 'sessions'), 
             where("userId", "==", currentUser.uid),
@@ -1283,18 +1272,14 @@ async function saveCompletedExercises(day, completedIds) {
         const querySnapshot = await getDocs(q);
         
         if (querySnapshot.empty) {
-            // Crea una nuova sessionef
-            await addDoc(collection(db, 'sessions'), sessionData);
+            await addDoc(collection(db, 'sessions'), sessionDoc);
         } else {
-            // Aggiorna la sessione esistente
             const docRef = querySnapshot.docs[0].ref;
             await updateDoc(docRef, {
-                completedExercises: completedIds,
+                completedSets: setsData,
                 lastUpdated: new Date()
             });
         }
-        
-        console.log('Stato sessione salvato per', day);
     } catch (error) {
         console.error('Errore nel salvare lo stato della sessione:', error);
     }
@@ -1312,7 +1297,6 @@ async function saveCompletedDiet(day, completedIdsDiet) {
             timestamp: new Date()
         };
         
-        // Cerca se esiste già una sessione per questo giorno
         const q = query(
             collection(db, 'sessionsdiet'), 
             where("userId", "==", currentUser.uid),
@@ -1322,10 +1306,8 @@ async function saveCompletedDiet(day, completedIdsDiet) {
         const querySnapshot = await getDocs(q);
         
         if (querySnapshot.empty) {
-            // Crea una nuova sessione
             await addDoc(collection(db, 'sessionsdiet'), sessionFoodData);
         } else {
-            // Aggiorna la sessione esistente
             const docRef = querySnapshot.docs[0].ref;
             await updateDoc(docRef, {
                 completedFoods: completedIdsDiet,
@@ -1338,10 +1320,9 @@ async function saveCompletedDiet(day, completedIdsDiet) {
         console.error('Errore nel salvare lo stato della sessione:', error);
     }
 }
-//caricamento degli esercizi completati
 
-async function loadCompletedExercises(day) {
-    if (!currentUser) return [];
+// async function loadSessionState(day) {
+    if (!currentUser) return {};
     
     try {
         const q = query(
@@ -1354,13 +1335,13 @@ async function loadCompletedExercises(day) {
         
         if (!querySnapshot.empty) {
             const sessionData = querySnapshot.docs[0].data();
-            return sessionData.completedExercises || [];
+            return sessionData.completedSets || {}; // Return object or empty object
         }
         
-        return [];
+        return {};
     } catch (error) {
         console.error('Errore nel caricare lo stato della sessione:', error);
-        return [];
+        return {};
     }
 }
 async function loadCompletedFoods(day) {
@@ -1387,8 +1368,7 @@ async function loadCompletedFoods(day) {
     }
 }
 
-
-async function resetSessionInDatabase(day) {
+// async function resetSessionInDatabase(day) {
     if (!currentUser) return;
     
     try {
@@ -1401,13 +1381,11 @@ async function resetSessionInDatabase(day) {
         const querySnapshot = await getDocs(q);
         
         if (!querySnapshot.empty) {
-            // Invece di eliminare il documento, aggiorna con array vuoto
             const docRef = querySnapshot.docs[0].ref;
             await updateDoc(docRef, {
-                completedExercises: [],
+                completedSets: {}, // Reset to an empty object
                 lastUpdated: new Date()
             });
-            console.log('Sessione resettata per', day);
         }
     } catch (error) {
         console.error('Errore nel resettare la sessione:', error);
@@ -1427,13 +1405,11 @@ async function resetDietSessionInDatabase(day) {
         const querySnapshot = await getDocs(q);
         
         if (!querySnapshot.empty) {
-            // Invece di eliminare il documento, aggiorna con array vuoto
             const docRef = querySnapshot.docs[0].ref;
             await updateDoc(docRef, {
                 completedFoods: [],
                 lastUpdated: new Date()
             });
-            console.log('Sessione resettata per', day);
         }
     } catch (error) {
         console.error('Errore nel resettare la sessione:', error);
@@ -1445,53 +1421,47 @@ function displaySessionExercises() {
     const container = document.getElementById('session-exercises');
     
     if (!currentSessionDay) {
-        container.innerHTML = `
-            <div class="empty-state">
-                <div class="empty-state-icon">🏋️</div>
-                <p>Seleziona un giorno per iniziare la tua sessione di allenamento!</p>
-            </div>
-        `;
+        container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🏋️</div><p>Seleziona un giorno per iniziare!</p></div>`;
         return;
     }
     
     if (sessionExercises.length === 0) {
-        container.innerHTML = `
-            <div class="empty-state">
-                <div class="empty-state-icon">📝</div>
-                <p>Nessun esercizio programmato per ${getDayName(currentSessionDay)}.<br>Aggiungi alcuni esercizi nella sezione Allenamento!</p>
-            </div>
-        `;
+        container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📝</div><p>Nessun esercizio per ${getDayName(currentSessionDay)}.</p></div>`;
         return;
     }
     
-    let html = '';
-    sessionExercises.forEach(exercise => {
-        const isCompleted = completedExercises.includes(exercise.id);
-        html += createSessionExerciseHTML(exercise, isCompleted);
-    });
-    
-    container.innerHTML = html;
+    // container.innerHTML = sessionExercises.map(exercise => {
+        const setsDone = completedSets[exercise.id] || 0;
+        return createSessionExerciseHTML(exercise, setsDone);
+    }).join('');
 }
 
-function createSessionExerciseHTML(exercise, isCompleted) {
-    const completedClass = isCompleted ? 'completed' : '';
-    const completedIcon = isCompleted ? '✅' : '⏳';
+// function createSessionExerciseHTML(exercise, setsDone) {
+    const totalSets = exercise.sets;
+    const isCompleted = setsDone === totalSets;
     
+    let setsHTML = '';
+    for (let i = 0; i < totalSets; i++) {
+        setsHTML += `<div class="set-indicator ${i < setsDone ? 'completed' : ''}"></div>`;
+    }
+
     return `
-        <div class="session-exercise-item ${completedClass}" onclick="toggleExerciseCompletion('${exercise.id}')">
+        <div class="session-exercise-item ${isCompleted ? 'completed' : ''}" onclick="completeOneSet('${exercise.id}')">
             <div class="exercise-header">
                 <div class="exercise-name">
                     <span class="exercise-order-badge">#${exercise.order || '?'}</span>
-                    <span class="completion-icon">${completedIcon}</span>
                     ${exercise.name}
                 </div>
                 <div class="exercise-status">
-                    ${isCompleted ? 'Completato' : 'In attesa'}
+                    ${isCompleted ? 'Completato' : 'In corso'}
                 </div>
             </div>
             <div class="exercise-details">
-                ${exercise.sets} serie × ${exercise.reps} ripetizioni
-                ${isCompleted ? '<br><small style="color: #34C759;">✅ Esercizio completato!</small>' : '<br><small>Tocca per segnare come completato</small>'}
+                ${exercise.sets} serie × ${exercise.reps} rip.
+                <br><small>Serie completate: ${setsDone} / ${totalSets}</small>
+            </div>
+            <div class="sets-progress">
+                ${setsHTML}
             </div>
         </div>
     `;
@@ -1501,32 +1471,19 @@ function displaySessionFood() {
     const container = document.getElementById('session-diet');
     
     if (!currentSessionDay) {
-        container.innerHTML = `
-            <div class="empty-state">
-                <div class="empty-state-icon">🏋️</div>
-                <p>Seleziona un giorno per iniziare la tua sessione di dieta!</p>
-            </div>
-        `;
+        container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🍽️</div><p>Seleziona un giorno per la tua dieta!</p></div>`;
         return;
     }
     
     if (sessionFood.length === 0) {
-        container.innerHTML = `
-            <div class="empty-state">
-                <div class="empty-state-icon">📝</div>
-                <p>Nessun pasto programmatato per ${getDayName(currentSessionDay)}.<br>Aggiungi alcuni pasti nella sezione Dieta!</p>
-            </div>
-        `;
+        container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📝</div><p>Nessun pasto per ${getDayName(currentSessionDay)}.</p></div>`;
         return;
     }
     
-    let html = '';
-    sessionFood.forEach(food => {
+    container.innerHTML = sessionFood.map(food => {
         const isCompleted = completedFoods.includes(food.id);
-        html += createSessionFoodHTML(food, isCompleted);
-    });
-    
-    container.innerHTML = html;
+        return createSessionFoodHTML(food, isCompleted);
+    }).join('');
 }
 
 function createSessionFoodHTML(foods, isCompleted) {
@@ -1535,7 +1492,7 @@ function createSessionFoodHTML(foods, isCompleted) {
     
     return `
         <div class="session-exercise-item ${completedClass}" onclick="toggleDietCompletion('${foods.id}')">
-            <div class="diet-header">
+            <div class="food-header">
                 <div class="food-name">
                     <span class="completion-icon">${completedIcon}</span>
                     ${foods.name}
@@ -1544,7 +1501,7 @@ function createSessionFoodHTML(foods, isCompleted) {
                     ${isCompleted ? 'Completato' : 'In attesa'}
                 </div>
             </div>
-            <div class="exercise-details">
+            <div class="food-details">
                 ${foods.quantity} grammi | Da mangiare per ${foods.pasto} 
                 ${isCompleted ? '<br><small style="color: #34C759;">✅Pasto completato!</small>' : '<br><small>Tocca per segnare come completato</small>'}
             </div>
@@ -1553,38 +1510,36 @@ function createSessionFoodHTML(foods, isCompleted) {
 }
 
 
+// window.completeOneSet = async function(exerciseId) {
+    const exercise = sessionExercises.find(ex => ex.id === exerciseId);
+    if (!exercise) return;
 
-window.toggleExerciseCompletion = async function(exerciseId) {
-    const index = completedExercises.indexOf(exerciseId);
-    
-    if (index > -1) {
-        // Rimuovi dalla lista dei completati
-        completedExercises.splice(index, 1);
-    } else {
-        // Aggiungi alla lista dei completati
-        completedExercises.push(exerciseId);
+    let currentSets = completedSets[exerciseId] || 0;
+    currentSets++;
+
+    // If user clicks past the last set, it resets to 0
+    if (currentSets > exercise.sets) {
+        currentSets = 0;
     }
+
+    completedSets[exerciseId] = currentSets;
+
+    await saveSessionState(currentSessionDay, completedSets);
     
-    // Salva lo stato nel database
-    await saveCompletedExercises(currentSessionDay, completedExercises);
-    
-    // Aggiorna l'interfaccia
     updateSessionProgress();
     displaySessionExercises();
     
-    // Mostra messaggio di congratulazioni se tutti gli esercizi sono completati
-    if (completedExercises.length === sessionExercises.length && sessionExercises.length > 0) {
-        showCompletionMessage();
+    if (currentSets === exercise.sets) {
+        const allDone = sessionExercises.every(ex => (completedSets[ex.id] || 0) === ex.sets);
+        if (allDone) {
+            showCompletionMessage();
+        }
     }
     
-    // Mostra/nascondi il pulsante reset
-    const resetBtn = document.getElementById('reset-session-btn');
-    if (completedExercises.length > 0) {
-        resetBtn.classList.remove('hidden');
-    } else {
-        resetBtn.classList.add('hidden');
-    }
+    const hasProgress = Object.values(completedSets).some(count => count > 0);
+    document.getElementById('reset-session-btn').classList.toggle('hidden', !hasProgress);
 }
+
 
 window.toggleDietCompletion = async function(foodId) {
     const index = completedFoods.indexOf(foodId);
@@ -1595,54 +1550,42 @@ window.toggleDietCompletion = async function(foodId) {
         completedFoods.push(foodId);
     }
     
-    // Salva lo stato nel database
     await saveCompletedDiet(currentSessionDay, completedFoods);
     
-    // Aggiorna l'interfaccia
     updateDietProgress();
-    displaySessionFood(); // ✅ Corretto nome funzione
+    displaySessionFood();
     
-    // Mostra messaggio di congratulazioni se tutti i pasti sono completati
     if (completedFoods.length === sessionFood.length && sessionFood.length > 0) {
-        showDietCompletionMessage(); // ✅ Funzione specifica per la dieta
+        showDietCompletionMessage();
     }
     
-    // Mostra/nascondi il pulsante reset
     const resetBtn = document.getElementById('reset-diet-session-btn');
-    if (completedFoods.length > 0) {
-        resetBtn.classList.remove('hidden');
-    } else {
-        resetBtn.classList.add('hidden');
-    }
+    resetBtn.classList.toggle('hidden', completedFoods.length === 0);
 }
 
 
-    function updateSessionProgress() {
-    const totalExercises = sessionExercises.length;
-    const completedCount = completedExercises.length;
-    const progressPercentage = totalExercises > 0 ? (completedCount / totalExercises) * 100 : 0;
-    
-    // Aggiorna il testo del progresso
-    document.getElementById('session-progress-text').textContent = 
-        `${completedCount} / ${totalExercises} esercizi completati`;
-    
-    // Aggiorna la barra di progresso
-    const progressFill = document.getElementById('session-progress-fill');
-    if (progressFill) {
-        progressFill.style.width = `${progressPercentage}%`;
+    // function updateSessionProgress() {
+        const totalExercises = sessionExercises.length;
+        if (totalExercises === 0) {
+            document.getElementById('session-progress-text').textContent = 'Nessun esercizio per oggi';
+            document.getElementById('session-progress-fill').style.width = '0%';
+            return;
+        }
+
+        const completedCount = sessionExercises.filter(ex => (completedSets[ex.id] || 0) === ex.sets).length;
+        const progressPercentage = (completedCount / totalExercises) * 100;
+        
+        document.getElementById('session-progress-text').textContent = `${completedCount} / ${totalExercises} esercizi completati`;
+        document.getElementById('session-progress-fill').style.width = `${progressPercentage}%`;
     }
-}
 
    function updateDietProgress() {
     const totalFood = sessionFood.length;
     const completedCount = completedFoods.length;
     const progressPercentage = totalFood > 0 ? (completedCount / totalFood) * 100 : 0;
     
-    // Aggiorna il testo del progresso
-    document.getElementById('diet-progress-text').textContent = 
-        `${completedCount} / ${totalFood} dieta  completata`;
+    document.getElementById('diet-progress-text').textContent = `${completedCount} / ${totalFood} dieta completata`;
     
-    // Aggiorna la barra di progresso
     const progressFill = document.getElementById('diet-progress-fill');
     if (progressFill) {
         progressFill.style.width = `${progressPercentage}%`;
@@ -1674,7 +1617,6 @@ function showCompletionMessage() {
     
     container.appendChild(congratsMessage);
     
-    // Rimuovi il messaggio dopo 5 secondi
     setTimeout(() => {
         if (congratsMessage.parentNode) {
             congratsMessage.remove();
@@ -1713,36 +1655,23 @@ function showDietCompletionMessage() {
     }, 6000);
 }   
 
-// Reset della sessione
-window.resetSession = async function() {
+// window.resetSession = async function() {
     if (confirm('Sei sicuro di voler resettare la sessione? Tutti i progressi verranno cancellati.')) {
-        // Resetta nel database
         await resetSessionInDatabase(currentSessionDay);
+        completedSets = {};
         
-        // Resetta localmente
-        completedExercises = [];
-        
-        // Debug: conferma che l'array è vuoto
-        console.log('Dopo reset - completedExercises:', completedExercises);
-        
-        // Aggiorna l'interfaccia
         updateSessionProgress();
         displaySessionExercises();
         document.getElementById('reset-session-btn').classList.add('hidden');
-        
-        // Mostra messaggio di reset
         showError('Sessione resettata con successo');
     }
 }
 
-// Reset della sessione
 window.resetDietSession = async function() {
     if (confirm('Sei sicuro di voler resettare la sessione dieta? Tutti i progressi verranno cancellati.')) {
         await resetDietSessionInDatabase(currentSessionDay);
         
         completedFoods = [];
-        
-        console.log('Dopo reset - completedFoods:', completedFoods);
         
         updateDietProgress();
         displaySessionFood();
@@ -1752,45 +1681,9 @@ window.resetDietSession = async function() {
     }
 }
 
-// Aggiorna la sessione quando vengono caricati nuovi esercizi
-function updateSessionAfterExerciseLoad() {
-    if (currentSessionDay) {
-        // Ricarica gli esercizi per il giorno corrente
-        sessionExercises = exercises.filter(exercise => exercise.day === currentSessionDay)
-            .sort((a, b) => (a.order || 999) - (b.order || 999));
-        
-        // Pulisci gli esercizi completati che non esistono più
-        completedExercises = completedExercises.filter(id => 
-            sessionExercises.some(exercise => exercise.id === id)
-        );
-        
-        // Aggiorna l'interfaccia
-        updateSessionProgress();
-        displaySessionExercises();
-    }
-}
-
-// Aggiorna la sessione quando vengono caricati nuovi esercizi
-function updateSessionAfterFoodLoad() {
-    if (currentSessionDay) {
-        // Ricarica gli esercizi per il giorno corrente
-        sessionFood = foods.filter(food => food.day === currentSessionDay)
-            .sort((a, b) => (a.order || 999) - (b.order || 999));
-        
-        // Pulisci gli esercizi completati che non esistono più
-        completedFoods = completedFoods.filter(id => 
-            sessionFood.some(food => food.id === id)
-        );
-        
-        // Aggiorna l'interfaccia
-        updateDietProgress();
-        displaySessionFood();
-    }
-}
-
         // Funzioni Firebase per alimenti
         async function loadFoods() {
-    if (!currentUser) return; // Ensure user is logged in
+    if (!currentUser) return;
 
     try {
         showLoading(true);
@@ -1812,13 +1705,11 @@ function updateSessionAfterFoodLoad() {
 
 
         async function saveFood(food) {
-    if (!currentUser) return; // Ensure user is logged in
+    if (!currentUser) return;
 
     try {
         disableButton('add-food-btn', true);
-
-        // Add userId BEFORE saving
-        food.userId = currentUser.uid; // Add this line
+        food.userId = currentUser.uid;
 
         const docRef = await addDoc(collection(db, 'foods'), food);
         food.id = docRef.id;
@@ -1856,17 +1747,17 @@ function updateSessionAfterFoodLoad() {
             });
 
             document.getElementById(tabName + '-tab').classList.add('active');
-            event.target.classList.add('active');
+            // Find the button associated with the tab and make it active
+            document.querySelector(`.tab-btn[onclick="showTab('${tabName}')"]`).classList.add('active');
         }
 
-                window.addExercise = function() {
+                   window.addExercise = function() {
             const day = document.getElementById('exercise-day').value;
             const name = document.getElementById('exercise-name').value;
             const setsValue = document.getElementById('exercise-sets').value;
             const repsValue = document.getElementById('exercise-reps').value;
             const orderValue = document.getElementById('exercise-order').value;
 
-            // Validazione più precisa
             if (!day || !name || !setsValue || !repsValue || !orderValue) {
                 alert('Per favore, compila tutti i campi incluso il giorno');
                 return;
@@ -1876,9 +1767,8 @@ function updateSessionAfterFoodLoad() {
             const reps = repsValue;
             const order= parseInt(orderValue)
 
-            // Controllo che i valori numerici siano validi
             if (isNaN(sets) ||  sets <= 0 ||  order <= 0) {
-                alert('Per favore, inserisci valori numerici validi e maggiori di zero');
+                alert('Per favore, inserisci valori numerici validi e maggiori di zero per serie e ordine');
                 return;
             }
 
@@ -1901,9 +1791,9 @@ function updateSessionAfterFoodLoad() {
         const pasto = document.getElementById('food-pasto').value;
         const protein = parseFloat(document.getElementById('food-protein').value);
         const carbs = parseFloat(document.getElementById('food-carbs').value);
-        const day = document.getElementById('food-day').value; // Add this line to get the day
+        const day = document.getElementById('food-day').value;
 
-        if (!name || !quantity || pasto ==='' || protein === '' || carbs === '' || !day) { // Add !day to the validation
+        if (!name || !quantity || pasto ==='' || protein === '' || carbs === '' || !day) {
             alert('Per favore, compila tutti i campi');
             return;
         }
@@ -1914,7 +1804,7 @@ function updateSessionAfterFoodLoad() {
             pasto: pasto,
             protein: protein,
             carbs: carbs,
-            day: day, // Add the day to the food object
+            day: day,
             date: new Date().toLocaleDateString('it-IT'),
             timestamp: new Date()
         };
@@ -1938,7 +1828,7 @@ function updateSessionAfterFoodLoad() {
         window.filterFoodByDay = function(day) {
     currentFoodDayFilter = day;
 
-    document.querySelectorAll('.food-day-btn').forEach(btn => { // You'll need a new class for food day filter buttons
+    document.querySelectorAll('.food-day-btn').forEach(btn => {
         btn.classList.remove('active');
     });
     event.target.classList.add('active');
@@ -1949,7 +1839,8 @@ function updateSessionAfterFoodLoad() {
         window.filterByDay = function(day) {
             currentDayFilter = day;
             
-            document.querySelectorAll('.day-btn').forEach(btn => {
+            // This selector might be too broad, ensure it only targets workout-tab buttons
+            document.querySelectorAll('#workout-tab .day-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             event.target.classList.add('active');
@@ -1957,7 +1848,7 @@ function updateSessionAfterFoodLoad() {
             displayExercises();
         }
 
-               function displayExercises() {
+                   function displayExercises() {
     const container = document.getElementById('exercises-list');
     
     let filteredExercises = exercises;
@@ -1965,28 +1856,20 @@ function updateSessionAfterFoodLoad() {
         filteredExercises = exercises.filter(exercise => exercise.day === currentDayFilter);
     }
     
-    // ⭐ ORDINA GLI ESERCIZI PER IL CAMPO ORDER
     filteredExercises.sort((a, b) => {
-        // Prima ordina per giorno (se visualizziamo tutti i giorni)
         if (currentDayFilter === 'all' && a.day !== b.day) {
             const dayOrder = ['lunedi', 'martedi', 'mercoledi', 'giovedi', 'venerdi', 'sabato', 'domenica'];
             return dayOrder.indexOf(a.day) - dayOrder.indexOf(b.day);
         }
-        // Poi ordina per order (numero di ordinamento)
-        return (a.order || 999) - (b.order || 999); // Gli esercizi senza order vanno alla fine
+        return (a.order || 999) - (b.order || 999);
     });
     
     if (filteredExercises.length === 0) {
         const message = currentDayFilter === 'all' 
-            ? 'Nessun esercizio aggiunto ancora.<br>Inizia ad aggiungere i tuoi allenamenti!'
-            : `Nessun esercizio per ${getDayName(currentDayFilter)}.<br>Aggiungi un esercizio per questo giorno!`;
+            ? 'Nessun esercizio aggiunto. Inizia ad aggiungere i tuoi allenamenti!'
+            : `Nessun esercizio per ${getDayName(currentDayFilter)}.`;
             
-        container.innerHTML = `
-            <div class="empty-state">
-                <div class="empty-state-icon">🏋️</div>
-                <p>${message}</p>
-            </div>
-        `;
+        container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🏋️</div><p>${message}</p></div>`;
         return;
     }
 
@@ -1994,17 +1877,11 @@ function updateSessionAfterFoodLoad() {
         const exercisesByDay = {};
         const dayOrder = ['lunedi', 'martedi', 'mercoledi', 'giovedi', 'venerdi', 'sabato', 'domenica'];
         
-        // Raggruppa per giorno mantenendo l'ordinamento
         filteredExercises.forEach(exercise => {
             if (!exercisesByDay[exercise.day]) {
                 exercisesByDay[exercise.day] = [];
             }
             exercisesByDay[exercise.day].push(exercise);
-        });
-
-        // ⭐ ORDINA OGNI GRUPPO DI ESERCIZI PER GIORNO
-        Object.keys(exercisesByDay).forEach(day => {
-            exercisesByDay[day].sort((a, b) => (a.order || 999) - (b.order || 999));
         });
 
         let html = '';
@@ -2019,7 +1896,7 @@ function updateSessionAfterFoodLoad() {
         
         container.innerHTML = html;
     } else {
-        container.innerHTML = filteredExercises.map(exercise => createExerciseHTML(exercise)).join('');
+        container.innerHTML = filteredExercises.map(createExerciseHTML).join('');
     }
 }
 
@@ -2030,7 +1907,7 @@ function updateSessionAfterFoodLoad() {
                 <div class="exercise-name">
                     <span class="exercise-order-badge">#${exercise.order || '?'}</span>
                     ${exercise.name}
-                    ${currentDayFilter === 'all' ? '' : `<span class="exercise-day-badge">${getDayName(exercise.day)}</span>`}
+                    ${currentDayFilter === 'all' ? `<span class="exercise-day-badge">${getDayName(exercise.day)}</span>` : ''}
                 </div>
                 <button class="btn btn-danger" onclick="removeExercise('${exercise.id}')">Rimuovi</button>
             </div>
@@ -2055,10 +1932,9 @@ function displayFoods() {
     filteredFoods.sort((a, b) => {
         if (currentFoodDayFilter === 'all' && a.day !== b.day) {
             const dayOrder = ['lunedi', 'martedi', 'mercoledi', 'giovedi', 'venerdi', 'sabato', 'domenica'];
-            //const pastoOrder = ['Colazione', 'Spuntino mattina', 'Pranzo','Spuntino pomeriggio', 'Cena']
             return dayOrder.indexOf(a.day) - dayOrder.indexOf(b.day);
         }
-       
+        
         return new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime();
     });
 
@@ -2067,12 +1943,7 @@ function displayFoods() {
             ? 'Nessun alimento aggiunto ancora.<br>Inizia a tracciare la tua alimentazione!'
             : `Nessun alimento per ${getDayName(currentFoodDayFilter)}.<br>Aggiungi un alimento per questo giorno!`;
 
-        container.innerHTML = `
-            <div class="empty-state">
-                <div class="empty-state-icon">🍽️</div>
-                <p>${message}</p>
-            </div>
-        `;
+        container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🍽️</div><p>${message}</p></div>`;
         return;
     }
 
@@ -2092,13 +1963,13 @@ function displayFoods() {
             if (foodsByDay[day]) {
                 html += `<div class="food-day-header">${getDayName(day)}</div>`;
                 foodsByDay[day].forEach(food => {
-                    html += createFoodHTML(food); // Use a separate function for food HTML
+                    html += createFoodHTML(food);
                 });
             }
         });
         container.innerHTML = html;
     } else {
-        container.innerHTML = filteredFoods.map(food => createFoodHTML(food)).join('');
+        container.innerHTML = filteredFoods.map(createFoodHTML).join('');
     }
 }
 
@@ -2108,12 +1979,12 @@ function createFoodHTML(food) {
             <div class="food-header">
                 <div class="food-name">
                     ${food.name}
-                    ${currentFoodDayFilter === 'all' ? '' : `<span class="food-day-badge">${getDayName(food.day)}</span>`}
+                    ${currentFoodDayFilter === 'all' ? `<span class="food-day-badge">${getDayName(food.day)}</span>` : ''}
                 </div>
                 <button class="btn btn-danger" onclick="removeFood('${food.id}')">Rimuovi</button>
             </div>
             <div class="food-details">
-                ${food.quantity}g • ${food.pasto} • proteine ${food.protein} • cairbodrati ${food.carbs}
+                ${food.quantity}g • ${food.pasto} • proteine ${food.protein} • carboidrati ${food.carbs}
                 <br><small>Aggiunto il: ${food.date}</small>
             </div>
         </div>
@@ -2136,17 +2007,19 @@ function createFoodHTML(food) {
 
         
             function updateWorkoutStats() {
-            const totalExercises = exercises.length;
-            const totalSets = exercises.reduce((sum, ex) => sum + ex.sets, 0);
+                const totalExercises = exercises.length;
+                const totalSets = exercises.reduce((sum, ex) => sum + (ex.sets || 0), 0);
+                const uniqueDays = new Set(exercises.map(ex => ex.day)).size;
 
-             document.getElementById('total-exercises').textContent = totalExercises;
-             document.getElementById('total-sets').textContent = totalSets;
-        }
+                document.getElementById('total-exercises').textContent = totalExercises;
+                document.getElementById('total-sets').textContent = totalSets;
+                document.getElementById('total-days').textContent = uniqueDays;
+            }
 
 //Pensare ad una funziona utile
     function updateDietStats() {
-    const totalProtein = foods.reduce((sum, food) => sum + food.protein, 0);
-    const totalCarbs = foods.reduce((sum, food) => sum + food.carbs, 0);
+    const totalProtein = foods.reduce((sum, food) => sum + (food.protein || 0), 0);
+    const totalCarbs = foods.reduce((sum, food) => sum + (food.carbs || 0), 0);
 
     document.getElementById('total-protein').textContent = totalProtein.toFixed(1);
     document.getElementById('total-carbs').textContent = totalCarbs.toFixed(1);
@@ -2161,6 +2034,7 @@ function createFoodHTML(food) {
 }
 
         function clearFoodForm() {
+            document.getElementById('food-day').value = '';
             document.getElementById('food-name').value = '';
             document.getElementById('food-quantity').value = '';
             document.getElementById('food-pasto').value = '';
@@ -2171,32 +2045,6 @@ function createFoodHTML(food) {
         // Inizializzazione dell'app
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🚀 Inizializzazione FitTracker con Firebase...');
-            
-            // Carica i dati da Firebase
-            loadExercises();
-            loadFoods();
-            
-            // Configura listener in tempo reale (opzionale)
-            // Uncomment per avere aggiornamenti in tempo reale
-            /*
-            onSnapshot(collection(db, 'exercises'), (snapshot) => {
-                exercises = [];
-                snapshot.forEach((doc) => {
-                    exercises.push({ id: doc.id, ...doc.data() });
-                });
-                displayExercises();
-                updateWorkoutStats();
-            });
-
-            onSnapshot(collection(db, 'foods'), (snapshot) => {
-                foods = [];
-                snapshot.forEach((doc) => {
-                    foods.push({ id: doc.id, ...doc.data() });
-                });
-                displayFoods();
-                updateDietStats();
-            });
-            */
         });
 
         // Gestione errori globale
@@ -2208,8 +2056,10 @@ function createFoodHTML(food) {
         // Gestione della connessione
         window.addEventListener('online', () => {
             console.log('🌐 Connessione ripristinata');
-            loadExercises();
-            loadFoods();
+            if (currentUser) {
+                loadExercises();
+                loadFoods();
+            }
         });
 
         window.addEventListener('offline', () => {
