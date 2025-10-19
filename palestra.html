@@ -2,9 +2,25 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FitTracker Gabriele e Letizia</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>FitTracker</title>
     <style>
+        :root {
+            --brand-primary: #7700ff;
+            --ios-blue: #0A84FF;
+            --ios-green: #30D158;
+            --ios-orange: #FF9F0A;
+            --ios-red: #FF453A;
+            --label-primary: #FFFFFF;
+            --label-secondary: #EBEBF599;
+            --label-tertiary: #EBEBF54D;
+            --fill-primary: #76768029;
+            --fill-secondary: #76768024;
+            --bg-primary: #000000;
+            --bg-secondary: #1C1C1E;
+            --bg-tertiary: #2C2C2E;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,402 +28,104 @@
             -webkit-tap-highlight-color: transparent;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-            background: #000;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-primary);
             min-height: 100vh;
-            color: #fff;
+            color: var(--label-primary);
             overflow-x: hidden;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
         }
-
-        /* Sfondo iOS-style */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
-            z-index: -1;
-        }
-
+        
         .container {
-            max-width: 428px;
+            max-width: 430px; /* iPhone 14 Pro Max width */
             margin: 0 auto;
             padding: 20px 16px;
-            position: relative;
         }
 
+        /* Header */
         .header {
             text-align: center;
-            margin-bottom: 32px;
-            padding-top: 20px;
+            margin-bottom: 24px;
         }
 
         .header h1 {
-            font-size: 32px;
+            font-size: 34px;
             font-weight: 700;
-            margin-bottom: 8px;
-            background: linear-gradient(135deg, #7700ff 0%, #5856D6 100%);
+            margin-bottom: 4px;
+            background: linear-gradient(135deg, var(--brand-primary) 0%, var(--ios-blue) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: -0.5px;
         }
 
         .header p {
             font-size: 16px;
-            color: #8E8E93;
-            font-weight: 400;
+            color: var(--label-secondary);
         }
 
-        .loading {
-            text-align: center;
-            color: #7700ff;
-            margin: 20px 0;
-            font-weight: 500;
-        }
-
-        /* Auth Container */
+        /* Auth Screen */
         .auth-container {
-            max-width: 350px;
-            margin: 60px auto;
-            background: rgba(28, 28, 30, 0.95);
+            margin-top: 50px;
+            background: var(--bg-secondary);
             backdrop-filter: blur(20px);
             border-radius: 24px;
-            padding: 40px 24px;
+            padding: 32px 24px;
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
-
         .auth-title {
+            text-align: center;
             font-size: 28px;
             font-weight: 700;
-            margin-bottom: 32px;
-            text-align: center;
-            background: linear-gradient(135deg, #7700ff 0%, #5856D6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .auth-form {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .auth-input {
-            padding: 16px 20px;
-            background: rgba(44, 44, 46, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            font-size: 16px;
-            color: #fff;
-            transition: all 0.2s ease;
-        }
-
-        .auth-input::placeholder {
-            color: #8E8E93;
-        }
-
-        .auth-input:focus {
-            outline: none;
-            border-color: #7700ff;
-            background: rgba(44, 44, 46, 1);
-            transform: scale(1.02);
-        }
-
-        .auth-btn {
-            padding: 16px;
-            background: #7700ff;
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 17px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            margin-top: 8px;
-        }
-
-        .auth-btn:hover:not(:disabled) {
-            background: #0056CC;
-            transform: scale(1.02);
-        }
-
-        .auth-btn:active {
-            transform: scale(0.98);
-        }
-
-        .auth-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+            margin-bottom: 24px;
         }
 
         .auth-switch {
-            margin-top: 24px;
             text-align: center;
-            color: #8E8E93;
+            margin-top: 20px;
             font-size: 15px;
+            color: var(--label-secondary);
         }
-
         .auth-switch button {
-            background: none;
-            border: none;
-            color: #7700ff;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 15px;
+            background: none; border: none; color: var(--ios-blue);
+            font-weight: 600; font-size: 15px; cursor: pointer;
         }
 
-        .user-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(28, 28, 30, 0.8);
-            backdrop-filter: blur(20px);
-            padding: 16px 20px;
-            border-radius: 16px;
-            margin-bottom: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .logout-btn {
-            background: rgba(255, 59, 48, 0.2);
-            color: #FF3B30;
-            border: 1px solid rgba(255, 59, 48, 0.3);
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-
-        
-    .session-progress {
-        background: rgba(28, 28, 30, 0.8);
-        backdrop-filter: blur(20px);
-        border-radius: 20px;
-        padding: 24px;
-        margin-bottom: 24px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        text-align: center;
-    }
-    .dietsession-progress {
-        background: rgba(28, 28, 30, 0.8);
-        backdrop-filter: blur(20px);
-        border-radius: 20px;
-        padding: 24px;
-        margin-bottom: 24px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        text-align: center;
-    }
-
-    .progress-text {
-        font-size: 24px;
-        font-weight: 700;
-        color: #007AFF;
-        margin-bottom: 12px;
-    }
-
-    .progress-bar {
-        background: rgba(44, 44, 46, 0.8);
-        height: 12px;
-        border-radius: 6px;
-        overflow: hidden;
-        margin-bottom: 12px;
-    }
-
-    .progress-fill {
-        background: linear-gradient(90deg, #007AFF, #5856D6);
-        height: 100%;
-        border-radius: 6px;
-        transition: width 0.3s ease;
-        width: 0%;
-    }
-
-    .progress-subtitle {
-        color: #8E8E93;
-        font-size: 16px;
-        font-weight: 500;
-    }
-
-    .session-exercise-item {
-        background: rgba(44, 44, 46, 0.6);
-        border-radius: 16px;
-        padding: 20px;
-        margin-bottom: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        transition: all 0.2s ease;
-        cursor: pointer;
-    }
-
-    .session-exercise-item:hover {
-        background: rgba(44, 44, 46, 0.8);
-        transform: translateY(-2px);
-    }
-
-    .session-exercise-item.completed {
-        background: rgba(52, 199, 89, 0.2);
-        border-color: rgba(52, 199, 89, 0.3);
-    }
-
-    .completion-icon {
-        font-size: 18px;
-        margin-right: 8px;
-    }
-    
-    /* NEW: Set Progress Indicator Styles */
-    .sets-progress {
-        display: flex;
-        gap: 6px;
-        margin-top: 12px;
-    }
-    .set-indicator {
-        width: 16px;
-        height: 16px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.2);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        transition: all 0.2s ease;
-    }
-    .set-indicator.completed {
-        background: #34C759;
-        border-color: #34C759;
-        transform: scale(1.1);
-    }
-
-
-    .exercise-status {
-        font-size: 14px;
-        font-weight: 600;
-        padding: 4px 12px;
-        border-radius: 12px;
-        background: rgba(142, 142, 147, 0.2);
-        color: #8E8E93;
-    }
-
-    .session-exercise-item.completed .exercise-status {
-        background: rgba(52, 199, 89, 0.3);
-        color: #34C759;
-    }
-
-    .btn-reset {
-        background: rgba(255, 149, 0, 0.2);
-        color: #FF9500;
-        border: 1px solid rgba(255, 149, 0, 0.3);
-        margin-top: 16px;
-    }
-
-    .btn-reset:hover:not(:disabled) {
-        background: rgba(255, 149, 0, 0.3);
-    }
-
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-
-
-        .logout-btn:hover {
-            background: rgba(255, 59, 48, 0.3);
-        }
-
-        /* Tabs */
-        .tabs {
-            display: flex;
-            background: rgba(28, 28, 30, 0.8);
-            backdrop-filter: blur(20px);
-            border-radius: 16px;
-            padding: 4px;
-            margin-bottom: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .tab-btn {
-            flex: 1;
-            padding: 12px 16px;
-            background: none;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            color: #8E8E93;
-        }
-
-        .tab-btn.active {
-            background: #7700ff;
-            color: white;
-            transform: scale(1.02);
-        }
-
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Cards */
-        .section-card {
-            background: rgba(28, 28, 30, 0.8);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 24px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .section-title {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
+        /* --- Form Group with Labels --- */
         .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-row {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
             margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            color: var(--label-secondary);
+            margin-bottom: 8px;
+            padding-left: 4px;
+        }
+        .form-group .form-control {
+            width: 100%;
         }
 
         .form-control {
-            padding: 16px 20px;
-            background: rgba(44, 44, 46, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 14px 18px;
+            background: var(--fill-primary);
+            border: 1px solid transparent;
             border-radius: 12px;
             font-size: 16px;
-            color: #fff;
+            color: var(--label-primary);
             transition: all 0.2s ease;
+            width: 100%;
+            -webkit-appearance: none;
+            appearance: none;
         }
-
-        .form-control::placeholder {
-            color: #8E8E93;
-        }
-
+        .form-control::placeholder { color: var(--label-tertiary); }
         .form-control:focus {
             outline: none;
-            border-color: #7700ff;
-            background: rgba(44, 44, 46, 1);
-            transform: scale(1.02);
+            border-color: var(--brand-primary);
+            background: var(--bg-tertiary);
         }
 
         .btn {
@@ -417,1223 +135,840 @@
             font-size: 17px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.2s ease-out;
             width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+        .btn:active { transform: scale(0.97); }
+        .btn-primary { background: var(--ios-blue); color: white; }
+        .btn-danger { background: var(--ios-red); color: white; }
 
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .btn-primary {
-            background: #7700ff;
-            color: white;
-        }
-
-        .btn-primary:hover:not(:disabled) {
-            background: #0056CC;
-            transform: scale(1.02);
-        }
-
-        .btn-primary:active {
-            transform: scale(0.98);
-        }
-
-        .btn-danger {
-            background: rgba(255, 59, 48, 0.2);
-            color: #FF3B30;
-            border: 1px solid rgba(255, 59, 48, 0.3);
-            padding: 8px 16px;
-            font-size: 14px;
-            width: auto;
-        }
-
-        .btn-danger:hover:not(:disabled) {
-            background: rgba(255, 59, 48, 0.3);
-        }
-
-        /* Exercise & Food Items */
-        .exercise-item, .food-item {
-            background: rgba(44, 44, 46, 0.6);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.2s ease;
-        }
-
-        .exercise-item:active, .food-item:active {
-            transform: scale(0.98);
-            background: rgba(44, 44, 46, 0.8);
-        }
-
-        .exercise-header, .food-header {
+        /* User Info Header */
+        .user-info {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .exercise-name, .food-name {
-            font-size: 17px;
-            font-weight: 600;
-            color: #fff;
-        }
-
-        .exercise-details, .food-details {
-            color: #8E8E93;
-            font-size: 15px;
-            line-height: 1.4;
-        }
-
-        .exercise-order {
-            background: #7700ff;
-            color: white;
-            font-size: 12px;
-            font-weight: 700;
-            padding: 6px 10px;
-            border-radius: 8px;
-            margin-right: 8px;
-            min-width: 24px;
-            text-align: center;
-        }
-
-        /* Stats */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-top: 24px;
-        }
-
-        .stat-card {
-            background: rgba(28, 28, 30, 0.8);
-            backdrop-filter: blur(20px);
-            padding: 20px 16px;
-            border-radius: 16px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .stat-number {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 4px;
-            color: #7700ff;
-        }
-
-        .stat-label {
-            font-size: 12px;
-            color: #8E8E93;
-            font-weight: 500;
-        }
-
-        /* Day Filter */
-        .day-filter {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
-            overflow-x: auto;
-            padding-bottom: 4px;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-
-        .day-filter::-webkit-scrollbar {
-            display: none;
-        }
-        .food-day-filter {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
-            overflow-x: auto;
-            padding-bottom: 4px;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-
-        .food-day-filter::-webkit-scrollbar {
-            display: none;
-        }
-
-        .day-btn {
-            padding: 8px 16px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            background: rgba(44, 44, 46, 0.6);
-            color: #8E8E93;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 14px;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-
-        .day-btn:active {
-            transform: scale(0.95);
-        }
-
-        .day-btn.active {
-            background: #007AFF;
-            color: white;
-            border-color: #007AFF;
-        }
-        .food-day-btn {
-            padding: 8px 16px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            background: rgba(44, 44, 46, 0.6);
-            color: #8E8E93;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 14px;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-
-        .food-day-btn:active {
-            transform: scale(0.95);
-        }
-
-        .food-day-btn.active {
-            background: #007AFF;
-            color: white;
-            border-color: #007AFF;
-        }
-
-    .food-day-header {
-            background: rgba(0, 122, 255, 0.2);
-            color: #007AFF;
+            background: var(--bg-secondary);
             padding: 12px 16px;
-            border-radius: 12px;
-            margin: 16px 0 12px 0;
-            font-weight: 600;
-            text-align: center;
-            font-size: 16px;
-            border: 1px solid rgba(0, 122, 255, 0.3);
+            border-radius: 14px;
+            margin-bottom: 24px;
         }
+        .logout-btn {
+            background: var(--fill-primary); color: var(--ios-red);
+            border: none; padding: 8px 12px; border-radius: 8px;
+            cursor: pointer; font-size: 14px; font-weight: 500;
+        }
+
+        /* Tabs (Segmented Control style) */
+        .tabs {
+            display: flex;
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 24px;
+        }
+        .tab-btn {
+            flex: 1; padding: 10px; background: none; border: none;
+            border-radius: 9px; font-size: 15px; font-weight: 600;
+            cursor: pointer; color: var(--label-secondary);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+        }
+        .tab-btn.active {
+            background: var(--brand-primary);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .tab-content { display: none; animation: fadeIn 0.4s ease; }
+        .tab-content.active { display: block; }
+
+        /* Cards */
+        .section-card {
+            background: var(--bg-secondary);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .section-title {
+            font-size: 22px; font-weight: 700;
+            margin-bottom: 20px; color: var(--label-primary);
+        }
+        
+        .progress-bar {
+            background: var(--fill-primary); height: 8px;
+            border-radius: 4px; overflow: hidden; margin: 12px 0;
+        }
+        .progress-fill {
+            background: var(--ios-blue); height: 100%;
+            border-radius: 4px; transition: width 0.4s ease; width: 0%;
+        }
+        .progress-text { font-size: 20px; font-weight: 600; text-align: center; }
+        .progress-subtitle { font-size: 15px; color: var(--label-secondary); text-align: center; }
+
+
+        /* Item Lists (Exercises, Food) */
+        .item-list .item {
+            background: var(--bg-tertiary);
+            border-radius: 16px; padding: 16px;
+            margin-bottom: 12px; border: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+        .item-header {
+            display: flex; justify-content: space-between;
+            align-items: flex-start; margin-bottom: 8px;
+        }
+        .item-name {
+            font-size: 17px; font-weight: 600; color: var(--label-primary);
+            display: flex; align-items: center; gap: 8px;
+            flex-grow: 1;
+            padding-right: 10px;
+        }
+        .item-details { color: var(--label-secondary); font-size: 15px; line-height: 1.4; }
+        .item-actions { display: flex; gap: 8px; flex-shrink: 0; }
+        .action-btn {
+            background: var(--fill-primary); border: none; border-radius: 8px;
+            width: 36px; height: 36px; font-size: 16px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+        }
+        .btn-edit { color: var(--ios-orange); }
+        .btn-delete { color: var(--ios-red); }
+
+        /* Session View */
+        .session-item { cursor: pointer; }
+        .session-item.completed {
+            background: rgba(48, 209, 88, 0.15);
+            border-color: rgba(48, 209, 88, 0.3);
+        }
+        .sets-progress { display: flex; gap: 4px; margin-top: 12px; }
+        .set-indicator {
+            height: 8px; flex: 1; border-radius: 4px;
+            background: var(--fill-primary); transition: all 0.3s ease;
+        }
+        .set-indicator.completed { background: var(--ios-green); }
+        .exercise-status, .food-status { font-size: 14px; color: var(--label-secondary); font-weight: 500;}
+
+        /* Day Filters */
+        .day-filter {
+            display: flex; gap: 8px; margin-bottom: 20px;
+            overflow-x: auto; padding-bottom: 4px; scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .day-filter::-webkit-scrollbar { display: none; }
+        .day-btn {
+            padding: 8px 16px; border: 1px solid var(--fill-primary);
+            border-radius: 20px; background: var(--bg-tertiary);
+            color: var(--label-secondary); font-weight: 600; cursor: pointer;
+            transition: all 0.2s ease; white-space: nowrap; flex-shrink: 0;
+        }
+        .day-btn.active {
+            background: var(--ios-blue); color: white; border-color: var(--ios-blue);
+        }
+
+        /* --- Toast Notification --- */
+        .toast {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 14px 24px;
+            border-radius: 14px;
+            background: var(--bg-tertiary);
+            color: var(--label-primary);
+            font-weight: 500;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            transition: bottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .toast.show { bottom: calc(env(safe-area-inset-bottom, 0px) + 20px); }
+        .toast.success { background: var(--ios-green); color: white; }
+        .toast.error { background: var(--ios-red); color: white; }
+
+        /* --- Loading Spinner --- */
+        .loading { display: none; align-items: center; justify-content: center; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index: 9999; }
+        .spinner {
+            width: 32px; height: 32px;
+            border: 4px solid var(--fill-secondary);
+            border-top-color: var(--brand-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* --- Modal for Editing & Confirmation --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(5px);
+            z-index: 998; display: flex; align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: all; }
+        .modal-content {
+            background: var(--bg-secondary); border-radius: 20px;
+            padding: 24px; width: calc(100% - 32px); max-width: 400px;
+            transform: scale(0.95); transition: transform 0.3s ease;
+        }
+        .modal-overlay.active .modal-content { transform: scale(1); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .modal-title { font-size: 20px; font-weight: 600; }
+        .btn-close-modal { background: none; border: none; color: var(--label-secondary); font-size: 24px; cursor: pointer; }
+        .modal-actions { display: flex; gap: 12px; margin-top: 24px; }
+
+        .empty-state { text-align: center; padding: 40px 20px; color: var(--label-secondary); }
+        .empty-state-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.6; }
 
         .day-header {
-            background: rgba(0, 122, 255, 0.2);
-            color: #007AFF;
-            padding: 12px 16px;
-            border-radius: 12px;
-            margin: 16px 0 12px 0;
-            font-weight: 600;
-            text-align: center;
             font-size: 16px;
-            border: 1px solid rgba(0, 122, 255, 0.3);
-        }
-
-        .exercise-day-badge {
-            background: #007AFF;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 12px;
             font-weight: 600;
-            text-transform: capitalize;
-        }
-        .food-day-badge {
-            background: #007AFF;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: capitalize;
+            color: var(--label-secondary);
+            padding: 12px 4px;
+            margin-top: 16px;
+            border-bottom: 1px solid var(--fill-primary);
         }
 
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: #8E8E93;
-        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .hidden { display: none !important; }
 
-        .empty-state-icon {
-            font-size: 48px;
-            margin-bottom: 16px;
-            opacity: 0.6;
-        }
-
-        .error-message {
-            background: rgba(255, 59, 48, 0.2);
-            color: #FF3B30;
-            padding: 12px 16px;
-            border-radius: 12px;
-            margin: 12px 0;
-            text-align: center;
-            border: 1px solid rgba(255, 59, 48, 0.3);
-            font-size: 15px;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .exercise-order-badge {
-            background: #7700ff;
-            color: white;
-            padding: 4px 8px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 700;
-            margin-right: 8px;
-            display: inline-block;
-            min-width: 20px;
-            text-align: center;
-        }
-
-        /* iOS Safe Area */
-        @supports (padding-top: env(safe-area-inset-top)) {
-            .header {
-                padding-top: calc(env(safe-area-inset-top) + 20px);
-            }
-        }
-
-        /* Responsive */
-        @media (max-width: 428px) {
-            .container {
-                padding: 20px 12px;
-            }
-            
-            .auth-container {
-                margin: 40px auto;
-                padding: 32px 20px;
-            }
-            
-            .section-card {
-                padding: 20px;
-            }
-            
-            .stats-grid {
-                gap: 8px;
-            }
-            
-            .stat-card {
-                padding: 16px 12px;
-            }
-            
-            .stat-number {
-                font-size: 20px;
-            }
-            
-            .stat-label {
-                font-size: 11px;
-            }
-        }
-
-        /* Dark mode enhancements */
-        @media (prefers-color-scheme: dark) {
-            body {
-                background: #000;
-            }
-        }
-
-        /* Smooth scrolling */
-        html {
-            scroll-behavior: smooth;
-        }
-
-        /* Selection */
-        ::selection {
-            background: rgba(0, 122, 255, 0.3);
+        @media (max-width: 380px) {
+            .tab-label { display: none; }
+            .tab-btn { font-size: 20px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div id="auth-screen" class="auth-container">
-            <h2 class="auth-title"><img src="images/Logo.png" alt="Il Mio Logo" style="height: 80px; width: auto;"></h2>            <div id="login-section">
-                <h3 style="margin-bottom: 20px; color: #8E8E93; font-weight: 500; text-align: center;">Accedi al tuo account</h3>
-                <div class="auth-form">
-                    <input type="email" id="login-email" class="auth-input" placeholder="Email" required>
-                    <input type="password" id="login-password" class="auth-input" placeholder="Password" required>
-                    <button id="login-btn" onclick="loginUser()" class="auth-btn">Accedi</button>
+        <div id="auth-screen">
+            <div class="auth-container">
+                <h2 class="auth-title">FitTracker</h2>
+                <div id="login-section">
+                    <h3 style="text-align:center; color: var(--label-secondary); font-weight: 500; margin-bottom:20px;">Accedi</h3>
+                    <div class="form-group"><input type="email" id="login-email" class="form-control" placeholder="Email" required autocomplete="email"></div>
+                    <div class="form-group"><input type="password" id="login-password" class="form-control" placeholder="Password" required autocomplete="current-password"></div>
+                    <button id="login-btn" onclick="loginUser()" class="btn btn-primary">Accedi</button>
+                    <div class="auth-switch">Non hai un account? <button onclick="switchToRegister()">Registrati</button></div>
                 </div>
-                <div class="auth-switch">
-                    Non hai un account? <button onclick="switchToRegister()">Registrati</button>
-                </div>
-            </div>
-            
-            <div id="register-form" class="hidden">
-                <h3 style="margin-bottom: 20px; color: #8E8E93; font-weight: 500; text-align: center;">Crea un nuovo account</h3>
-                <div class="auth-form">
-                    <input type="email" id="register-email" class="auth-input" placeholder="Email" required>
-                    <input type="password" id="register-password" class="auth-input" placeholder="Password (min 6 caratteri)" required>
-                    <input type="password" id="register-password-confirm" class="auth-input" placeholder="Conferma Password" required>
-                    <button id="register-btn" onclick="registerUser()" class="auth-btn">Registrati</button>
-                </div>
-                <div class="auth-switch">
-                    Hai già un account? <button onclick="switchToLogin()">Accedi</button>
+                <div id="register-form" class="hidden">
+                    <h3 style="text-align:center; color: var(--label-secondary); font-weight: 500; margin-bottom:20px;">Crea Account</h3>
+                    <div class="form-group"><input type="email" id="register-email" class="form-control" placeholder="Email" required autocomplete="email"></div>
+                    <div class="form-group"><input type="password" id="register-password" class="form-control" placeholder="Password (min 6 caratteri)" required autocomplete="new-password"></div>
+                    <div class="form-group"><input type="password" id="register-password-confirm" class="form-control" placeholder="Conferma Password" required autocomplete="new-password"></div>
+                    <button id="register-btn" onclick="registerUser()" class="btn btn-primary">Registrati</button>
+                    <div class="auth-switch">Hai già un account? <button onclick="switchToLogin()">Accedi</button></div>
                 </div>
             </div>
         </div>
 
         <div id="main-app" class="hidden">
-            <div class="header">
+            <header class="header">
                 <div class="user-info">
-                    <span>👋 Benvenuto, <span id="user-email"></span></span>
-                    <button id="logout-btn" onclick="logoutUser()" class="logout-btn">Esci</button>
+                    <span>👋 Ciao, <span id="user-email"></span></span>
+                    <button onclick="logoutUser()" class="logout-btn">Esci</button>
                 </div>
-                <h1>🏋️ FitTracker</h1>
-                <p>Monitora i tuoi progressi in palestra e la tua alimentazione</p>
-                <div id="loading" class="loading" style="display: none;">
-                    <p>🔄 Caricamento...</p>
-                </div>
-                <div id="error-container"></div>
-            </div>
-
-            <div class="tabs">
-                <button class="tab-btn" onclick="showTab('session')">⚡ Sessione</button>
-                <button class="tab-btn active" onclick="showTab('workout')"><img src="images/logo_palestra.png" alt="Allenamento" style="height: 16px; width: auto; margin-right: 5px;"> Scheda</button>
-                <button class="tab-btn" onclick="showTab('diet')">🥗 Dieta</button>
-                <button class="tab-btn" onclick="showTab('dietsession')">📊 Dieta oggi </button>
-            </div>
-<div id="session-tab" class="tab-content">
-                <div class="session-progress">
-                    <div class="progress-text" id="session-progress-text">0 / 0 esercizi completati</div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="session-progress-fill"></div>
-                    </div>
-                    <div class="progress-subtitle" id="session-day-text">Seleziona il giorno di allenamento</div>
-                </div>
-
-                <div class="section-card">
-                    <h2 class="section-title">📅 Seleziona Giorno</h2>
-                    <div class="day-filter">
-                        <button class="day-btn" onclick="loadSessionDay('lunedi')">Lun</button>
-                        <button class="day-btn" onclick="loadSessionDay('martedi')">Mar</button>
-                        <button class="day-btn" onclick="loadSessionDay('mercoledi')">Mer</button>
-                        <button class="day-btn" onclick="loadSessionDay('giovedi')">Gio</button>
-                        <button class="day-btn" onclick="loadSessionDay('venerdi')">Ven</button>
-                        <button class="day-btn" onclick="loadSessionDay('sabato')">Sab</button>
-                        <button class="day-btn" onclick="loadSessionDay('domenica')">Dom</button>
-                    </div>
-                </div>
-
-                <div class="section-card">
-                    <h2 class="section-title">🎯 Esercizi di Oggi</h2>
-                    <div id="session-exercises">
-                        <div class="empty-state">
-                            <div class="empty-state-icon">🏋️</div>
-                            <p>Seleziona un giorno per iniziare la tua sessione di allenamento!</p>
-                        </div>
-                    </div>
-                    <button id="reset-session-btn" class="btn btn-reset hidden" onclick="resetSession()">🔄 Reset Sessione</button>
-                </div>
-            </div>
+                <h1>FitTracker</h1>
+                <p>Monitora allenamento e dieta.</p>
+            </header>
             
-            <div id="dietsession-tab" class="tab-content">
-                <div class="dietsession-progress">
-                    <div class="progress-text" id="diet-progress-text">0 / 0 esercizi completati</div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="diet-progress-fill"></div>
-                    </div>
-                    <div class="progress-subtitle" id="dietsession-day-text">Seleziona il giorno di allenamento</div>
-                </div>
+            <div id="loading"><div class="spinner"></div></div>
 
-                <div class="section-card">
+            <nav class="tabs">
+                <button class="tab-btn" onclick="showTab('session')">⚡️<span class="tab-label">Sessione</span></button>
+                <button class="tab-btn active" onclick="showTab('workout')">🏋️‍♂️<span class="tab-label">Scheda</span></button>
+                <button class="tab-btn" onclick="showTab('diet')">🥗<span class="tab-label">Dieta</span></button>
+                <button class="tab-btn" onclick="showTab('dietsession')">📊<span class="tab-label">Dieta Oggi</span></button>
+            </nav>
+
+            <div id="session-tab" class="tab-content">
+                 <section class="section-card">
                     <h2 class="section-title">📅 Seleziona Giorno</h2>
-                    <div class="day-filter">
-                        <button class="day-btn" onclick="loadDietSessionDay('lunedi')">Lun</button>
-                        <button class="day-btn" onclick="loadDietSessionDay('martedi')">Mar</button>
-                        <button class="day-btn" onclick="loadDietSessionDay('mercoledi')">Mer</button>
-                        <button class="day-btn" onclick="loadDietSessionDay('giovedi')">Gio</button>
-                        <button class="day-btn" onclick="loadDietSessionDay('venerdi')">Ven</button>
-                        <button class="day-btn" onclick="loadDietSessionDay('sabato')">Sab</button>
-                        <button class="day-btn" onclick="loadDietSessionDay('domenica')">Dom</button>
+                    <div class="day-filter" id="session-day-filter"></div>
+                </section>
+                <section class="section-card">
+                     <div class="session-progress">
+                        <div class="progress-text" id="session-progress-text">0 / 0 completati</div>
+                        <div class="progress-bar"><div class="progress-fill" id="session-progress-fill"></div></div>
+                        <div class="progress-subtitle" id="session-day-text">Seleziona un giorno</div>
                     </div>
-                </div>
+                    <div id="session-exercises" class="item-list"></div>
+                    <button id="reset-session-btn" class="btn hidden" style="background:var(--ios-orange); color:white; margin-top:20px;" onclick="resetSession()">🔄 Reset Sessione</button>
+                </section>
+            </div>
 
-                <div class="section-card">
-                    <h2 class="section-title">🥗 Dieta di Oggi</h2>
-                    <div id="session-diet">
-                        <div class="empty-state">
-                            <div class="empty-state-icon">🍽️</div>
-                            <p>Seleziona un giorno per iniziare la tua dieta giornaliera</p>
-                        </div>
+             <div id="dietsession-tab" class="tab-content">
+                 <section class="section-card">
+                    <h2 class="section-title">📅 Seleziona Giorno</h2>
+                    <div class="day-filter" id="dietsession-day-filter"></div>
+                </section>
+                <section class="section-card">
+                     <div class="dietsession-progress">
+                        <div class="progress-text" id="diet-progress-text">0 / 0 completati</div>
+                        <div class="progress-bar"><div class="progress-fill" id="diet-progress-fill"></div></div>
+                        <div class="progress-subtitle" id="dietsession-day-text">Seleziona un giorno</div>
                     </div>
-                    <button id="reset-diet-session-btn" class="btn btn-reset hidden" onclick="resetDietSession()">🔄 Reset Sessione</button>
-                </div>
+                    <div id="session-diet" class="item-list"></div>
+                    <button id="reset-diet-session-btn" class="btn hidden" style="background:var(--ios-orange); color:white; margin-top:20px;" onclick="resetDietSession()">🔄 Reset Dieta</button>
+                </section>
             </div>
 
             <div id="workout-tab" class="tab-content active">
-                <div class="section-card">
-                    <h2 class="section-title">🏋️ Aggiungi Esercizio</h2>
-                    <div class="form-group">
-                        <div class="form-row">
-                            <select id="exercise-day" class="form-control">
-                                <option value="">Seleziona giorno</option>
-                                <option value="lunedi">Lunedì</option>
-                                <option value="martedi">Martedì</option>
-                                <option value="mercoledi">Mercoledì</option>
-                                <option value="giovedi">Giovedì</option>
-                                <option value="venerdi">Venerdì</option>
-                                <option value="sabato">Sabato</option>
-                                <option value="domenica">Domenica</option>
-                            </select>
-                            <input type="text" id="exercise-name" class="form-control" placeholder="Nome esercizio (es. Panca piana)">
-                            <input type="number" id="exercise-sets" class="form-control" placeholder="Serie">
-                            <input type="text" id="exercise-reps" class="form-control" placeholder="Ripetizioni">
-                            <input type="number" id="exercise-order" class="form-control" placeholder="Ordine (1, 2, 3...)" min="1">
-                        </div>
-                        <button id="add-exercise-btn" class="btn btn-primary" onclick="addExercise()">Aggiungi Esercizio</button>
+                <section class="section-card">
+                    <h2 class="section-title">💪 Aggiungi Esercizio</h2>
+                    <div class="form-group"><label for="exercise-day">Giorno</label><select id="exercise-day" class="form-control"></select></div>
+                    <div class="form-group"><label for="exercise-name">Nome Esercizio</label><input type="text" id="exercise-name" class="form-control" placeholder="Es. Panca Piana"></div>
+                    <div style="display:flex; gap:12px;">
+                        <div class="form-group" style="flex:1;"><label for="exercise-sets">Serie</label><input type="number" id="exercise-sets" class="form-control" placeholder="4"></div>
+                        <div class="form-group" style="flex:1;"><label for="exercise-reps">Ripetizioni</label><input type="text" id="exercise-reps" class="form-control" placeholder="8-10"></div>
+                        <div class="form-group" style="flex:1;"><label for="exercise-order">Ordine</label><input type="number" id="exercise-order" class="form-control" placeholder="1"></div>
                     </div>
-                </div>
-
-                <div class="section-card">
-                    <h2 class="section-title">📊 La tua scheda</h2>
-                    
-                    <div class="day-filter">
-                        <button class="day-btn active" onclick="filterByDay('all')">Tutti</button>
-                        <button class="day-btn" onclick="filterByDay('lunedi')">Lun</button>
-                        <button class="day-btn" onclick="filterByDay('martedi')">Mar</button>
-                        <button class="day-btn" onclick="filterByDay('mercoledi')">Mer</button>
-                        <button class="day-btn" onclick="filterByDay('giovedi')">Gio</button>
-                        <button class="day-btn" onclick="filterByDay('venerdi')">Ven</button>
-                        <button class="day-btn" onclick="filterByDay('sabato')">Sab</button>
-                        <button class="day-btn" onclick="filterByDay('domenica')">Dom</button>
-                    </div>
-
-                    <div id="exercises-list">
-                        <div class="empty-state">
-                            <div class="empty-state-icon">🏋️</div>
-                            <p>Nessun esercizio aggiunto ancora.<br>Inizia ad aggiungere i tuoi allenamenti!</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-number" id="total-exercises">0</div>
-                        <div class="stat-label">Esercizi Totali</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="total-sets">0</div>
-                        <div class="stat-label">Serie Totali</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="total-days">0</div>
-                        <div class="stat-label">Giorni Allenamento</div>
-                    </div>
-                </div>
+                    <button onclick="addExercise()" class="btn btn-primary">Aggiungi Esercizio</button>
+                </section>
+                <section class="section-card">
+                    <h2 class="section-title">📖 La Tua Scheda</h2>
+                    <div class="day-filter" id="workout-day-filter"></div>
+                    <div id="exercises-list" class="item-list"></div>
+                </section>
             </div>
 
             <div id="diet-tab" class="tab-content">
-                <div class="section-card">
+                <section class="section-card">
                     <h2 class="section-title">🥗 Aggiungi Alimento</h2>
-                    <div class="form-group">
-                        <div class="form-row diet">
-                            <select id="food-day" class="form-control">
-                               <option value="">Seleziona giorno</option>
-                                <option value="lunedi">Lunedì</option>
-                                <option value="martedi">Martedì</option>
-                                <option value="mercoledi">Mercoledì</option>
-                                <option value="giovedi">Giovedì</option>
-                                <option value="venerdi">Venerdì</option>
-                                <option value="sabato">Sabato</option>
-                                <option value="domenica">Domenica</option>   
-                            </select>        
-                            <input type="text" id="food-name" class="form-control" placeholder="Nome alimento">
-                            <input type="number" id="food-quantity" class="form-control" placeholder="Quantità (g)">
-                            <input type="text" id="food-pasto" class="form-control" placeholder="Pasto">
-                            <input type="number" id="food-protein" class="form-control" placeholder="Proteine (g)">
-                            <input type="number" id="food-carbs" class="form-control" placeholder="Carboidrati (g)">
-                        </div>
-                        <button id="add-food-btn" class="btn btn-primary" onclick="addFood()">Aggiungi Alimento</button>
+                    <div class="form-group"><label for="food-day">Giorno</label><select id="food-day" class="form-control"></select></div>
+                    <div class="form-group"><label for="food-name">Nome Alimento</label><input type="text" id="food-name" class="form-control" placeholder="Es. Petto di Pollo"></div>
+                    <div style="display:flex; gap:12px;">
+                        <div class="form-group" style="flex:1;"><label for="food-quantity">Quantità (g)</label><input type="number" id="food-quantity" class="form-control" placeholder="150"></div>
+                        <div class="form-group" style="flex:1;"><label for="food-pasto">Pasto</label><input type="text" id="food-pasto" class="form-control" placeholder="Pranzo"></div>
                     </div>
-                </div>
+                     <div style="display:flex; gap:12px;">
+                        <div class="form-group" style="flex:1;"><label for="food-protein">Proteine (g)</label><input type="number" id="food-protein" class="form-control" placeholder="30"></div>
+                        <div class="form-group" style="flex:1;"><label for="food-carbs">Carboidrati (g)</label><input type="number" id="food-carbs" class="form-control" placeholder="5"></div>
+                    </div>
+                    <button onclick="addFood()" class="btn btn-primary">Aggiungi Alimento</button>
+                </section>
+                 <section class="section-card">
+                    <h2 class="section-title">🍽️ Il Tuo Piano Alimentare</h2>
+                    <div class="day-filter" id="food-day-filter"></div>
+                    <div id="foods-list" class="item-list"></div>
+                </section>
+            </div>
+        </div>
 
-                <div class="section-card">
-                    <h2 class="section-title">🍽️ I Tuoi Alimenti</h2>
+        <div id="toast" class="toast"></div>
 
-                    <div class="food-day-filter">
-    <button class="food-day-btn active" onclick="filterFoodByDay('all')">Tutti</button>
-    <button class="food-day-btn" onclick="filterFoodByDay('lunedi')">Lun</button>
-    <button class="food-day-btn" onclick="filterFoodByDay('martedi')">Mar</button>
-    <button class="food-day-btn" onclick="filterFoodByDay('mercoledi')">Mer</button>
-    <button class="food-day-btn" onclick="filterFoodByDay('giovedi')">Gio</button>
-    <button class="food-day-btn" onclick="filterFoodByDay('venerdi')">Ven</button>
-    <button class="food-day-btn" onclick="filterFoodByDay('sabato')">Sab</button>
-    <button class="food-day-btn" onclick="filterFoodByDay('domenica')">Dom</button>
-</div>
-                    <div id="foods-list">
-                        <div class="empty-state">
-                            <div class="empty-state-icon">🍽️</div>
-                            <p>Nessun alimento aggiunto ancora.<br>Inizia a tracciare la tua alimentazione!</p>
-                        </div>
-                    </div>
+        <div id="edit-modal" class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modal-title" class="modal-title">Modifica</h3>
+                    <button class="btn-close-modal" onclick="closeModal()">×</button>
                 </div>
-
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-number" id="total-protein">0</div>
-                        <div class="stat-label">Proteine (g)</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="total-carbs">0</div>
-                        <div class="stat-label">Carboidrati (g)</div>
-                    </div>
-                </div>
+                <div id="modal-body"></div>
             </div>
         </div>
     </div>
 
     <script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, onSnapshot, query, where, updateDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, where, updateDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
 
-
-        // Configurazione Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyAXxuBCf56hcmhoWj5edAx1YXWY6aPTZvY",
             authDomain: "trackerfit-e75d2.firebaseapp.com",
             projectId: "trackerfit-e75d2",
-            storageBucket: "trackerfit-e75d2.firebasestorage.app",
+            storageBucket: "trackerfit-e75d2.appspot.com",
             messagingSenderId: "796343470243",
             appId: "1:796343470243:web:7e113f2a414f3f66219716",
             measurementId: "G-FGPV9CWWC2"
         };
 
-        // Inizializza Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
-    
 
+        let exercises = [], foods = [], completedSets = {}, completedFoods = [];
+        let sessionExercises = [], sessionFood = [];
+        let currentUser, currentDayFilter = 'all', currentFoodDayFilter = 'all';
+        let currentSessionDay = null, currentDietSessionDay = null;
+        let editingItem = { id: null, type: null };
 
-        // Variabili globali
-        let exercises = [];
-        let foods = [];
-        let currentDayFilter = 'all';
-        let currentFoodDayFilter = 'all';
-        let currentUser;
-        let currentSessionDay = null;
-        let sessionExercises = [];
-        let sessionFood = [];
-        let completedSets = {};
-        let completedFoods = [];
+        const $ = (s) => document.querySelector(s);
+        const $$ = (s) => document.querySelectorAll(s);
 
-
-        // Funzioni di autenticazione
-        function switchToRegister() {
-            document.getElementById('login-section').classList.add('hidden');
-            document.getElementById('register-form').classList.remove('hidden');
+        // --- UTILITY FUNCTIONS ---
+        function triggerHapticFeedback() { if (navigator.vibrate) navigator.vibrate(50); }
+        function showToast(message, type = 'info') {
+            const toast = $('#toast');
+            toast.textContent = message;
+            toast.className = `toast show ${type}`;
+            setTimeout(() => toast.className = 'toast', 2800);
         }
-
-        function switchToLogin() {
-            document.getElementById('register-form').classList.add('hidden');
-            document.getElementById('login-section').classList.remove('hidden');
-        }
-
+        function showLoading(show) { $('#loading').style.display = show ? 'flex' : 'none'; }
+        const getDayName = (d) => ({lunedi:'Lunedì',martedi:'Martedì',mercoledi:'Mercoledì',giovedi:'Giovedì',venerdi:'Venerdì',sabato:'Sabato',domenica:'Domenica'}[d]||d);
+        
+        // --- AUTH FUNCTIONS ---
         async function loginUser() {
-            const email = document.getElementById("login-email").value;
-            const password = document.getElementById("login-password").value;
-            try {
-                await signInWithEmailAndPassword(auth, email, password);
-            } catch (error) {
-                showError("Email o password errati");
-            }
-        };
+            const btn = $('#login-btn');
+            btn.disabled = true;
+            try { await signInWithEmailAndPassword(auth, $('#login-email').value, $('#login-password').value); } 
+            catch (e) { showToast('Email o password errati.', 'error'); }
+            finally { btn.disabled = false; }
+        }
+        async function registerUser() {
+            const btn = $('#register-btn');
+            btn.disabled = true;
+            const [email, pass, conf] = [$('#register-email').value, $('#register-password').value, $('#register-password-confirm').value];
+            if (!email || !pass || !conf) { btn.disabled = false; return showToast('Compila tutti i campi.', 'error'); }
+            if (pass !== conf) { btn.disabled = false; return showToast('Le password non coincidono.', 'error'); }
+            if (pass.length < 6) { btn.disabled = false; return showToast('Password troppo corta (min 6).', 'error'); }
+            try { await createUserWithEmailAndPassword(auth, email, pass); } 
+            catch (e) { showToast(e.message, 'error'); }
+            finally { btn.disabled = false; }
+        }
+        async function logoutUser() { await signOut(auth); }
+        function switchToRegister() { $('#login-section').classList.add('hidden'); $('#register-form').classList.remove('hidden'); }
+        function switchToLogin() { $('#register-form').classList.add('hidden'); $('#login-section').classList.remove('hidden'); }
 
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async user => {
             if (user) {
                 currentUser = user;
-                document.getElementById("auth-screen").classList.add("hidden");
-                document.getElementById("main-app").classList.remove("hidden");
-                document.getElementById("user-email").textContent = user.email;
-                loadExercises();
-                loadFoods(); 
+                $('#auth-screen').classList.add('hidden');
+                $('#main-app').classList.remove('hidden');
+                $('#user-email').textContent = user.email.split('@')[0];
+                showLoading(true);
+                await Promise.all([loadExercises(), loadFoods()]);
+                showLoading(false);
             } else {
                 currentUser = null;
-                document.getElementById("auth-screen").classList.remove("hidden");
-                document.getElementById("main-app").classList.add("hidden");
+                $('#main-app').classList.add('hidden');
+                $('#auth-screen').classList.remove('hidden');
             }
         });
 
-        async function registerUser() {
-            const email = document.getElementById('register-email').value;
-            const password = document.getElementById('register-password').value;
-            const confirmPassword = document.getElementById('register-password-confirm').value;
-            if (!email || !password || !confirmPassword) {
-                showError('Compila tutti i campi');
-                return;
-            }
-            if (password !== confirmPassword) {
-                showError('Le password non coincidono');
-                return;
-            }
-            if (password.length < 6) {
-                showError('La password deve avere almeno 6 caratteri');
-                return;
-            }
-            try {
-                disableButton('register-btn', true);
-                await createUserWithEmailAndPassword(auth, email, password);
-            } catch (error) {
-                showError('Errore nella registrazione: ' + error.message);
-            } finally {
-                disableButton('register-btn', false);
-            }
+        // --- MODAL & EDIT FUNCTIONS ---
+        function openModal(title, content) {
+            $('#modal-title').textContent = title;
+            $('#modal-body').innerHTML = content;
+            $('#edit-modal').classList.add('active');
+        }
+        function closeModal() {
+            $('#edit-modal').classList.remove('active');
+            editingItem = { id: null, type: null };
         }
 
-        async function logoutUser() {
-            try {
-                await signOut(auth);
-            } catch (error) {
-                showError('Errore nel logout');
+        function editItem(type, id) {
+            editingItem = { type, id };
+            const item = type === 'exercise' ? exercises.find(i => i.id === id) : foods.find(i => i.id === id);
+            const isExercise = type === 'exercise';
+            
+            const formHTML = `
+                <div class="form-group"><label>Giorno</label><select id="edit-item-day" class="form-control">${generateDayOptions(item.day)}</select></div>
+                <div class="form-group"><label>Nome</label><input type="text" id="edit-item-name" class="form-control" value="${item.name}"></div>
+                ${isExercise ? `
+                    <div style="display:flex; gap:12px;">
+                        <div class="form-group" style="flex:1;"><label>Serie</label><input type="number" id="edit-item-sets" class="form-control" value="${item.sets}"></div>
+                        <div class="form-group" style="flex:1;"><label>Rip.</label><input type="text" id="edit-item-reps" class="form-control" value="${item.reps}"></div>
+                        <div class="form-group" style="flex:1;"><label>Ordine</label><input type="number" id="edit-item-order" class="form-control" value="${item.order}"></div>
+                    </div>
+                ` : `
+                    <div style="display:flex; gap:12px;">
+                        <div class="form-group" style="flex:1;"><label>Quantità (g)</label><input type="number" id="edit-item-quantity" class="form-control" value="${item.quantity}"></div>
+                        <div class="form-group" style="flex:1;"><label>Pasto</label><input type="text" id="edit-item-pasto" class="form-control" value="${item.pasto}"></div>
+                    </div>
+                     <div style="display:flex; gap:12px;">
+                        <div class="form-group" style="flex:1;"><label>Proteine (g)</label><input type="number" id="edit-item-protein" class="form-control" value="${item.protein}"></div>
+                        <div class="form-group" style="flex:1;"><label>Carboidrati (g)</label><input type="number" id="edit-item-carbs" class="form-control" value="${item.carbs}"></div>
+                    </div>
+                `}
+                <div class="modal-actions">
+                    <button onclick="closeModal()" class="btn" style="background:var(--bg-tertiary)">Annulla</button>
+                    <button onclick="updateItem()" class="btn btn-primary">Salva Modifiche</button>
+                </div>
+            `;
+            openModal(`Modifica ${isExercise ? 'Esercizio' : 'Alimento'}`, formHTML);
+        }
+
+        async function updateItem() {
+            const { type, id } = editingItem;
+            const isExercise = type === 'exercise';
+            let updatedData = {
+                day: $('#edit-item-day').value,
+                name: $('#edit-item-name').value,
+            };
+
+            if (isExercise) {
+                Object.assign(updatedData, {
+                    sets: parseInt($('#edit-item-sets').value),
+                    reps: $('#edit-item-reps').value,
+                    order: parseInt($('#edit-item-order').value)
+                });
+            } else {
+                 Object.assign(updatedData, {
+                    quantity: parseInt($('#edit-item-quantity').value),
+                    pasto: $('#edit-item-pasto').value,
+                    protein: parseFloat($('#edit-item-protein').value),
+                    carbs: parseFloat($('#edit-item-carbs').value)
+                });
             }
+
+            await updateDoc(doc(db, isExercise ? 'exercises' : 'foods', id), updatedData);
+            await (isExercise ? loadExercises() : loadFoods());
+            closeModal();
+            showToast(`${isExercise ? 'Esercizio' : 'Alimento'} aggiornato!`, 'success');
+        }
+        
+        function confirmDeleteItem(type, id) {
+             const message = type === 'exercise' ? 'Eliminare questo esercizio?' : 'Eliminare questo alimento?';
+             const content = `
+                <p style="text-align:center; color: var(--label-secondary);">${message}</p>
+                <div class="modal-actions">
+                    <button onclick="closeModal()" class="btn" style="background:var(--bg-tertiary)">Annulla</button>
+                    <button onclick="deleteItem('${type}', '${id}')" class="btn btn-danger">Conferma Elimina</button>
+                </div>
+             `;
+             openModal('Conferma Eliminazione', content);
         }
 
-         // Funzioni di utilità
-        function showLoading(show) {
-            document.getElementById('loading').style.display = show ? 'block' : 'none';
+        async function deleteItem(type, id) {
+            const collectionName = type === 'exercise' ? 'exercises' : 'foods';
+            await deleteDoc(doc(db, collectionName, id));
+            closeModal();
+            showToast('Elemento eliminato.', 'success');
+            await (type === 'exercise' ? loadExercises() : loadFoods());
         }
 
-        function showError(message) {
-            const container = document.getElementById('error-container');
-            container.innerHTML = `<div class="error-message">${message}</div>`;
-            setTimeout(() => { container.innerHTML = ''; }, 5000);
-        }
-
-        function disableButton(buttonId, disabled) {
-            document.getElementById(buttonId).disabled = disabled;
+        // --- DATA & RENDER FUNCTIONS ---
+        async function loadData(collectionName) {
+            if (!currentUser) return [];
+            const q = query(collection(db, collectionName), where("userId", "==", currentUser.uid));
+            const snapshot = await getDocs(q);
+            return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         }
 
         async function loadExercises() {
-            if (!currentUser) return;
-            try {
-                showLoading(true);
-                const q = query(collection(db, 'exercises'), where("userId", "==", currentUser.uid));
-                const querySnapshot = await getDocs(q);
-                exercises = [];
-                querySnapshot.forEach((doc) => {
-                    exercises.push({ id: doc.id, ...doc.data() });
-                });
-                displayExercises();
-                updateWorkoutStats();
-            } catch (error) {
-                showError('Errore nel caricamento degli esercizi');
-            } finally {
-                showLoading(false);
+            exercises = await loadData('exercises');
+            renderWorkouts();
+            if (currentSessionDay) loadSessionDay(currentSessionDay);
+        }
+        async function loadFoods() {
+            foods = await loadData('foods');
+            renderDiet();
+            if (currentDietSessionDay) loadDietSessionDay(currentDietSessionDay);
+        }
+
+        function renderWorkouts() {
+            let filtered = currentDayFilter === 'all' ? exercises : exercises.filter(ex => ex.day === currentDayFilter);
+            filtered.sort((a,b) => (a.order || 999) - (b.order || 999));
+            if (currentDayFilter === 'all' && filtered.length) {
+                const byDay = filtered.reduce((acc, ex) => {
+                    (acc[ex.day] = acc[ex.day] || []).push(ex);
+                    return acc;
+                }, {});
+                const dayOrder = ['lunedi', 'martedi', 'mercoledi', 'giovedi', 'venerdi', 'sabato', 'domenica'];
+                $('#exercises-list').innerHTML = dayOrder.filter(day => byDay[day])
+                    .map(day => `<h3 class="day-header">${getDayName(day)}</h3>` + byDay[day].sort((a,b) => a.order - b.order).map(createExerciseHTML).join(''))
+                    .join('');
+            } else {
+                 $('#exercises-list').innerHTML = filtered.length ? filtered.map(createExerciseHTML).join('') : `<div class="empty-state"><div class="empty-state-icon">🧘</div><p>Nessun esercizio qui.</p></div>`;
             }
         }
 
-        async function saveExercise(exercise) {
-            if (!currentUser) return;
-            try {
-                disableButton('add-exercise-btn', true);
-                exercise.userId = currentUser.uid;
-                const docRef = await addDoc(collection(db, 'exercises'), exercise);
-                exercise.id = docRef.id;
-                exercises.push(exercise);
-                displayExercises();
-                updateWorkoutStats();
-                clearExerciseForm();
-            } catch (error) {
-                showError('Errore nel salvare l\'esercizio');
-            } finally {
-                disableButton('add-exercise-btn', false);
-            }
-        }
-
-        async function deleteExercise(id) {
-            try {
-                await deleteDoc(doc(db, 'exercises', id));
-                exercises = exercises.filter(exercise => exercise.id !== id);
-                displayExercises();
-                updateWorkoutStats();
-            } catch (error) {
-                showError('Errore nell\'eliminare l\'esercizio');
-            }
-        }
-
-        async function loadSessionDay(day) {
-            currentSessionDay = day;
-            document.querySelectorAll('#session-tab .day-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelector(`#session-tab .day-btn[onclick="loadSessionDay('${day}')"]`).classList.add('active');
-            sessionExercises = exercises.filter(ex => ex.day === day).sort((a, b) => (a.order || 999) - (b.order || 999));
-            completedSets = await loadSessionState(day);
-            updateSessionProgress();
-            displaySessionExercises();
-            updateSessionDayText();
-            const hasProgress = Object.values(completedSets).some(count => count > 0);
-            document.getElementById('reset-session-btn').classList.toggle('hidden', !hasProgress);
-        }
-
-        async function loadDietSessionDay(day) {
-            currentSessionDay = day;
-            document.querySelectorAll('#dietsession-tab .day-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelector(`#dietsession-tab .day-btn[onclick="loadDietSessionDay('${day}')"]`).classList.add('active');
-            sessionFood = foods.filter(f => f.day === day);
-            completedFoods = await loadCompletedFoods(day);
-            updateDietProgress();
-            displaySessionFood();
-            updateDietDayText();
-            document.getElementById('reset-diet-session-btn').classList.toggle('hidden', completedFoods.length === 0);
-        }
-
-        function updateSessionDayText() {
-            const dayText = document.getElementById('session-day-text');
-            dayText.textContent = currentSessionDay ? `Allenamento di ${getDayName(currentSessionDay)}` : 'Seleziona il giorno di allenamento';
-        }
-
-        function updateDietDayText() {
-            const dayText = document.getElementById('dietsession-day-text');
-            dayText.textContent = currentSessionDay ? `Dieta di ${getDayName(currentSessionDay)}` : 'Seleziona il giorno di dieta';
-        }
-
-        async function saveSessionState(day, setsData) {
-            if (!currentUser) return;
-            try {
-                const q = query(collection(db, 'sessions'), where("userId", "==", currentUser.uid), where("day", "==", day));
-                const querySnapshot = await getDocs(q);
-                if (querySnapshot.empty) {
-                    await addDoc(collection(db, 'sessions'), { userId: currentUser.uid, day, completedSets: setsData, lastUpdated: new Date() });
-                } else {
-                    await updateDoc(querySnapshot.docs[0].ref, { completedSets: setsData, lastUpdated: new Date() });
-                }
-            } catch (error) {
-                console.error('Errore nel salvare lo stato della sessione:', error);
-            }
-        }
-
-        async function saveCompletedDiet(day, completedIdsDiet) {
-            if (!currentUser) return;
-            try {
-                const q = query(collection(db, 'sessionsdiet'), where("userId", "==", currentUser.uid), where("day", "==", day));
-                const querySnapshot = await getDocs(q);
-                if (querySnapshot.empty) {
-                    await addDoc(collection(db, 'sessionsdiet'), { userId: currentUser.uid, day, completedFoods: completedIdsDiet, lastUpdated: new Date() });
-                } else {
-                    await updateDoc(querySnapshot.docs[0].ref, { completedFoods: completedIdsDiet, lastUpdated: new Date() });
-                }
-            } catch (error) {
-                console.error('Errore nel salvare lo stato della sessione:', error);
-            }
-        }
-
-        async function loadSessionState(day) {
-            if (!currentUser) return {};
-            try {
-                const q = query(collection(db, 'sessions'), where("userId", "==", currentUser.uid), where("day", "==", day));
-                const querySnapshot = await getDocs(q);
-                if (!querySnapshot.empty) {
-                    return querySnapshot.docs[0].data().completedSets || {};
-                }
-                return {};
-            } catch (error) {
-                console.error('Errore nel caricare lo stato della sessione:', error);
-                return {};
-            }
+        function createExerciseHTML(ex) {
+            return `
+            <div class="item">
+                <div class="item-header">
+                    <div class="item-name">#${ex.order || '?'} ${ex.name}</div>
+                    <div class="item-actions">
+                        <button class="action-btn btn-edit" onclick="editItem('exercise', '${ex.id}')">✏️</button>
+                        <button class="action-btn btn-delete" onclick="confirmDeleteItem('exercise', '${ex.id}')">🗑️</button>
+                    </div>
+                </div>
+                <div class="item-details">${ex.sets} x ${ex.reps}</div>
+            </div>`;
         }
         
-        async function loadCompletedFoods(day) {
-            if (!currentUser) return [];
-            try {
-                const q = query(collection(db, 'sessionsdiet'), where("userId", "==", currentUser.uid), where("day", "==", day));
-                const querySnapshot = await getDocs(q);
-                if (!querySnapshot.empty) {
-                    return querySnapshot.docs[0].data().completedFoods || [];
-                }
-                return [];
-            } catch (error) {
-                console.error('Errore nel caricare lo stato della sessione:', error);
-                return [];
-            }
-        }
-
-        async function resetSessionInDatabase(day) {
-            if (!currentUser) return;
-            try {
-                const q = query(collection(db, 'sessions'), where("userId", "==", currentUser.uid), where("day", "==", day));
-                const querySnapshot = await getDocs(q);
-                if (!querySnapshot.empty) {
-                    await updateDoc(querySnapshot.docs[0].ref, { completedSets: {}, lastUpdated: new Date() });
-                }
-            } catch (error) {
-                console.error('Errore nel resettare la sessione:', error);
-            }
-        }
-
-        async function resetDietSessionInDatabase(day) {
-            if (!currentUser) return;
-            try {
-                const q = query(collection(db, 'sessionsdiet'), where("userId", "==", currentUser.uid), where("day", "==", day));
-                const querySnapshot = await getDocs(q);
-                if (!querySnapshot.empty) {
-                    await updateDoc(querySnapshot.docs[0].ref, { completedFoods: [], lastUpdated: new Date() });
-                }
-            } catch (error) {
-                console.error('Errore nel resettare la sessione:', error);
-            }
-        }
-
-        function displaySessionExercises() {
-            const container = document.getElementById('session-exercises');
-            if (!currentSessionDay) {
-                container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🏋️</div><p>Seleziona un giorno per iniziare!</p></div>`;
-                return;
-            }
-            if (sessionExercises.length === 0) {
-                container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📝</div><p>Nessun esercizio per ${getDayName(currentSessionDay)}.</p></div>`;
-                return;
-            }
-            container.innerHTML = sessionExercises.map(ex => createSessionExerciseHTML(ex, completedSets[ex.id] || 0)).join('');
-        }
-
-        function createSessionExerciseHTML(exercise, setsDone) {
-            const isCompleted = setsDone === exercise.sets;
-            let setsHTML = Array.from({ length: exercise.sets }, (_, i) => 
-                `<div class="set-indicator ${i < setsDone ? 'completed' : ''}"></div>`
-            ).join('');
-
-            return `
-                <div class="session-exercise-item ${isCompleted ? 'completed' : ''}" onclick="completeOneSet('${exercise.id}')">
-                    <div class="exercise-header">
-                        <div class="exercise-name"><span class="exercise-order-badge">#${exercise.order || '?'}</span>${exercise.name}</div>
-                        <div class="exercise-status">${isCompleted ? 'Completato' : 'In corso'}</div>
-                    </div>
-                    <div class="exercise-details">${exercise.sets} serie × ${exercise.reps} rip.<br><small>Serie completate: ${setsDone} / ${exercise.sets}</small></div>
-                    <div class="sets-progress">${setsHTML}</div>
-                </div>`;
-        }
-
-        function displaySessionFood() {
-            const container = document.getElementById('session-diet');
-            if (!currentSessionDay) {
-                container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🍽️</div><p>Seleziona un giorno!</p></div>`; return;
-            }
-            if (sessionFood.length === 0) {
-                container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📝</div><p>Nessun pasto per ${getDayName(currentSessionDay)}.</p></div>`; return;
-            }
-            container.innerHTML = sessionFood.map(food => createSessionFoodHTML(food, completedFoods.includes(food.id))).join('');
-        }
-
-        function createSessionFoodHTML(foods, isCompleted) {
-            return `
-                <div class="session-exercise-item ${isCompleted ? 'completed' : ''}" onclick="toggleDietCompletion('${foods.id}')">
-                    <div class="food-header">
-                        <div class="food-name"><span class="completion-icon">${isCompleted ? '✅' : '⏳'}</span>${foods.name}</div>
-                        <div class="exercise-status">${isCompleted ? 'Completato' : 'In attesa'}</div>
-                    </div>
-                    <div class="food-details">${foods.quantity}g | ${foods.pasto}${isCompleted ? '<br><small style="color: #34C759;">Pasto completato!</small>' : '<br><small>Tocca per completare</small>'}</div>
-                </div>`;
-        }
-
-        async function completeOneSet(exerciseId) {
-            const exercise = sessionExercises.find(ex => ex.id === exerciseId);
-            if (!exercise) return;
-            let currentSets = (completedSets[exerciseId] || 0) + 1;
-            completedSets[exerciseId] = currentSets > exercise.sets ? 0 : currentSets;
-            await saveSessionState(currentSessionDay, completedSets);
-            updateSessionProgress();
-            displaySessionExercises();
-            if (currentSets === exercise.sets && sessionExercises.every(ex => (completedSets[ex.id] || 0) === ex.sets)) {
-                showCompletionMessage();
-            }
-            document.getElementById('reset-session-btn').classList.toggle('hidden', !Object.values(completedSets).some(c => c > 0));
-        }
-
-        async function toggleDietCompletion(foodId) {
-            const index = completedFoods.indexOf(foodId);
-            index > -1 ? completedFoods.splice(index, 1) : completedFoods.push(foodId);
-            await saveCompletedDiet(currentSessionDay, completedFoods);
-            updateDietProgress();
-            displaySessionFood();
-            if (completedFoods.length === sessionFood.length && sessionFood.length > 0) {
-                showDietCompletionMessage();
-            }
-            document.getElementById('reset-diet-session-btn').classList.toggle('hidden', completedFoods.length === 0);
-        }
-
-        function updateSessionProgress() {
-            const total = sessionExercises.length;
-            if (total === 0) {
-                document.getElementById('session-progress-text').textContent = 'Nessun esercizio per oggi';
-                document.getElementById('session-progress-fill').style.width = '0%';
-                return;
-            }
-            const completedCount = sessionExercises.filter(ex => (completedSets[ex.id] || 0) === ex.sets).length;
-            document.getElementById('session-progress-text').textContent = `${completedCount} / ${total} esercizi completati`;
-            document.getElementById('session-progress-fill').style.width = `${(completedCount / total) * 100}%`;
-        }
-
-        function updateDietProgress() {
-            const total = sessionFood.length;
-            const completed = completedFoods.length;
-            document.getElementById('diet-progress-text').textContent = `${completed} / ${total} pasti completati`;
-            document.getElementById('diet-progress-fill').style.width = total > 0 ? `${(completed / total) * 100}%` : '0%';
-        }
-
-        function showCompletionMessage() {
-            const container = document.getElementById('session-exercises');
-            const msg = document.createElement('div');
-            msg.innerHTML = `<div style="background: linear-gradient(135deg, #34C759, #30D158); color: white; padding: 20px; border-radius: 16px; text-align: center; margin: 20px 0; animation: fadeIn 0.5s ease;"><div style="font-size: 48px; margin-bottom: 12px;">🎉</div><h3>Complimenti!</h3><p>Hai completato tutti gli esercizi di ${getDayName(currentSessionDay)}!</p></div>`;
-            container.appendChild(msg);
-            setTimeout(() => { msg.remove(); }, 6000);
-        }
-
-        function showDietCompletionMessage() {
-            const container = document.getElementById('session-diet');
-            const msg = document.createElement('div');
-            msg.innerHTML = `<div style="background: linear-gradient(135deg, #34C759, #30D158); color: white; padding: 20px; border-radius: 16px; text-align: center; margin: 20px 0; animation: fadeIn 0.5s ease;"><div style="font-size: 48px; margin-bottom: 12px;">🎉</div><h3>Complimenti!</h3><p>Hai completato tutti i pasti di ${getDayName(currentSessionDay)}!</p></div>`;
-            container.appendChild(msg);
-            setTimeout(() => { msg.remove(); }, 6000);
-        }
-
-        async function resetSession() {
-            if (confirm('Sei sicuro di voler resettare la sessione?')) {
-                await resetSessionInDatabase(currentSessionDay);
-                completedSets = {};
-                updateSessionProgress();
-                displaySessionExercises();
-                document.getElementById('reset-session-btn').classList.add('hidden');
-                showError('Sessione resettata con successo');
-            }
-        }
-
-        async function resetDietSession() {
-            if (confirm('Sei sicuro di voler resettare la sessione dieta?')) {
-                await resetDietSessionInDatabase(currentSessionDay);
-                completedFoods = [];
-                updateDietProgress();
-                displaySessionFood();
-                document.getElementById('reset-diet-session-btn').classList.add('hidden');
-                showError('Sessione dieta resettata con successo');
-            }
-        }
-
-        async function loadFoods() {
-            if (!currentUser) return;
-            try {
-                showLoading(true);
-                const q = query(collection(db, 'foods'), where("userId", "==", currentUser.uid));
-                const querySnapshot = await getDocs(q);
-                foods = [];
-                querySnapshot.forEach((doc) => { foods.push({ id: doc.id, ...doc.data() }); });
-                displayFoods();
-                updateDietStats();
-            } catch (error) {
-                showError('Errore nel caricamento degli alimenti');
-            } finally {
-                showLoading(false);
-            }
-        }
-
-        async function saveFood(food) {
-            if (!currentUser) return;
-            try {
-                disableButton('add-food-btn', true);
-                food.userId = currentUser.uid;
-                const docRef = await addDoc(collection(db, 'foods'), food);
-                food.id = docRef.id;
-                foods.push(food);
-                displayFoods();
-                updateDietStats();
-                clearFoodForm();
-            } catch (error) {
-                showError('Errore nel salvare l\'alimento');
-            } finally {
-                disableButton('add-food-btn', false);
-            }
-        }
-
-        async function deleteFood(id) {
-            try {
-                await deleteDoc(doc(db, 'foods', id));
-                foods = foods.filter(food => food.id !== id);
-                displayFoods();
-                updateDietStats();
-            } catch (error) {
-                showError('Errore nell\'eliminare l\'alimento');
-            }
-        }
-
-        function showTab(tabName, event) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(tabName + '-tab').classList.add('active');
-            document.querySelector(`.tab-btn[onclick="showTab('${tabName}')"]`).classList.add('active');
-        }
-
-        function addExercise() {
-            const day = document.getElementById('exercise-day').value;
-            const name = document.getElementById('exercise-name').value;
-            const sets = parseInt(document.getElementById('exercise-sets').value);
-            const reps = document.getElementById('exercise-reps').value;
-            const order = parseInt(document.getElementById('exercise-order').value);
-            if (!day || !name || !sets || !reps || !order || sets <= 0 || order <= 0) {
-                alert('Compila tutti i campi con valori validi.');
-                return;
-            }
-            saveExercise({ day, name, sets, reps, order, date: new Date().toLocaleDateString('it-IT'), timestamp: new Date() });
-        }
-
-        function addFood() {
-            const day = document.getElementById('food-day').value;
-            const name = document.getElementById('food-name').value;
-            const quantity = parseInt(document.getElementById('food-quantity').value);
-            const pasto = document.getElementById('food-pasto').value;
-            const protein = parseFloat(document.getElementById('food-protein').value);
-            const carbs = parseFloat(document.getElementById('food-carbs').value);
-            if (!day || !name || !quantity || !pasto || isNaN(protein) || isNaN(carbs)) {
-                alert('Compila tutti i campi correttamente.');
-                return;
-            }
-            saveFood({ day, name, quantity, pasto, protein, carbs, date: new Date().toLocaleDateString('it-IT'), timestamp: new Date() });
-        }
-
-        function removeExercise(id) {
-            if (confirm('Sei sicuro di voler eliminare questo esercizio?')) deleteExercise(id);
-        }
-
-        function removeFood(id) {
-            if (confirm('Sei sicuro di voler eliminare questo alimento?')) deleteFood(id);
-        }
-
-        function filterFoodByDay(day) {
-            currentFoodDayFilter = day;
-            document.querySelectorAll('.food-day-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelector(`.food-day-btn[onclick="filterFoodByDay('${day}')"]`).classList.add('active');
-            displayFoods();
-        }
-
-        function filterByDay(day) {
-            currentDayFilter = day;
-            document.querySelectorAll('#workout-tab .day-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelector(`#workout-tab .day-btn[onclick="filterByDay('${day}')"]`).classList.add('active');
-            displayExercises();
-        }
-
-        function displayExercises() {
-            const container = document.getElementById('exercises-list');
-            let filtered = currentDayFilter === 'all' ? exercises : exercises.filter(ex => ex.day === currentDayFilter);
-            filtered.sort((a, b) => {
-                if (currentDayFilter === 'all' && a.day !== b.day) {
-                    const days = ['lunedi', 'martedi', 'mercoledi', 'giovedi', 'venerdi', 'sabato', 'domenica'];
-                    return days.indexOf(a.day) - days.indexOf(b.day);
-                }
-                return (a.order || 999) - (b.order || 999);
-            });
-            if (filtered.length === 0) {
-                container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🏋️</div><p>Nessun esercizio trovato.</p></div>`; return;
-            }
-            if (currentDayFilter === 'all') {
-                const byDay = filtered.reduce((acc, ex) => {
-                    acc[ex.day] = (acc[ex.day] || []).concat(ex);
+        function renderDiet() {
+             let filtered = currentFoodDayFilter === 'all' ? foods : foods.filter(f => f.day === currentFoodDayFilter);
+              if (currentFoodDayFilter === 'all' && filtered.length) {
+                const byDay = filtered.reduce((acc, f) => {
+                    (acc[f.day] = acc[f.day] || []).push(f);
                     return acc;
                 }, {});
-                container.innerHTML = ['lunedi', 'martedi', 'mercoledi', 'giovedi', 'venerdi', 'sabato', 'domenica']
-                    .filter(day => byDay[day])
-                    .map(day => `<div class="day-header">${getDayName(day)}</div>` + byDay[day].map(createExerciseHTML).join(''))
+                const dayOrder = ['lunedi', 'martedi', 'mercoledi', 'giovedi', 'venerdi', 'sabato', 'domenica'];
+                $('#foods-list').innerHTML = dayOrder.filter(day => byDay[day])
+                    .map(day => `<h3 class="day-header">${getDayName(day)}</h3>` + byDay[day].map(createFoodHTML).join(''))
                     .join('');
-            } else {
-                container.innerHTML = filtered.map(createExerciseHTML).join('');
-            }
-        }
-
-        function createExerciseHTML(exercise) {
-            return `
-                <div class="exercise-item">
-                    <div class="exercise-header">
-                        <div class="exercise-name"><span class="exercise-order-badge">#${exercise.order || '?'}</span>${exercise.name}${currentDayFilter === 'all' ? `<span class="exercise-day-badge">${getDayName(exercise.day)}</span>` : ''}</div>
-                        <button class="btn btn-danger" onclick="removeExercise('${exercise.id}')">Rimuovi</button>
-                    </div>
-                    <div class="exercise-details">${exercise.sets} serie × ${exercise.reps} rip.<br><small>Aggiunto il: ${exercise.date}</small></div>
-                </div>`;
-        }
-
-        function displayFoods() {
-            const container = document.getElementById('foods-list');
-            let filtered = currentFoodDayFilter === 'all' ? foods : foods.filter(f => f.day === currentFoodDayFilter);
-            if (filtered.length === 0) {
-                container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🍽️</div><p>Nessun alimento trovato.</p></div>`; return;
-            }
-            if (currentFoodDayFilter === 'all') {
-                 const byDay = filtered.reduce((acc, f) => {
-                    acc[f.day] = (acc[f.day] || []).concat(f);
-                    return acc;
-                }, {});
-                container.innerHTML = ['lunedi', 'martedi', 'mercoledi', 'giovedi', 'venerdi', 'sabato', 'domenica']
-                    .filter(day => byDay[day])
-                    .map(day => `<div class="food-day-header">${getDayName(day)}</div>` + byDay[day].map(createFoodHTML).join(''))
-                    .join('');
-            } else {
-                 container.innerHTML = filtered.map(createFoodHTML).join('');
-            }
+              } else {
+                $('#foods-list').innerHTML = filtered.length ? filtered.map(createFoodHTML).join('') : `<div class="empty-state"><div class="empty-state-icon">🍎</div><p>Nessun alimento qui.</p></div>`;
+              }
         }
 
         function createFoodHTML(food) {
             return `
-                <div class="food-item">
-                    <div class="food-header">
-                        <div class="food-name">${food.name}${currentFoodDayFilter === 'all' ? `<span class="food-day-badge">${getDayName(food.day)}</span>` : ''}</div>
-                        <button class="btn btn-danger" onclick="removeFood('${food.id}')">Rimuovi</button>
+            <div class="item">
+                <div class="item-header">
+                    <div class="item-name">${food.name}</div>
+                     <div class="item-actions">
+                        <button class="action-btn btn-edit" onclick="editItem('food', '${food.id}')">✏️</button>
+                        <button class="action-btn btn-delete" onclick="confirmDeleteItem('food', '${food.id}')">🗑️</button>
                     </div>
-                    <div class="food-details">${food.quantity}g • ${food.pasto} • P:${food.protein}g • C:${food.carbs}g<br><small>Aggiunto: ${food.date}</small></div>
-                </div>`;
+                </div>
+                <div class="item-details">${food.quantity}g • ${food.pasto} | P:${food.protein}g C:${food.carbs}g</div>
+            </div>`;
         }
-
-        function getDayName(day) {
-            return {lunedi: 'Lunedì', martedi: 'Martedì', mercoledi: 'Mercoledì', giovedi: 'Giovedì', venerdi: 'Venerdì', sabato: 'Sabato', domenica: 'Domenica'}[day] || day;
-        }
-
-        function updateWorkoutStats() {
-            document.getElementById('total-exercises').textContent = exercises.length;
-            document.getElementById('total-sets').textContent = exercises.reduce((sum, ex) => sum + (ex.sets || 0), 0);
-            document.getElementById('total-days').textContent = new Set(exercises.map(ex => ex.day)).size;
-        }
-
-        function updateDietStats() {
-            document.getElementById('total-protein').textContent = foods.reduce((s, f) => s + (f.protein || 0), 0).toFixed(1);
-            document.getElementById('total-carbs').textContent = foods.reduce((s, f) => s + (f.carbs || 0), 0).toFixed(1);
-        }
-
-        function clearExerciseForm() {
-            document.getElementById('exercise-day').value = '';
-            document.getElementById('exercise-name').value = '';
-            document.getElementById('exercise-sets').value = '';
-            document.getElementById('exercise-reps').value = '';
-            document.getElementById('exercise-order').value = '';
-        }
-
-        function clearFoodForm() {
-            document.getElementById('food-day').value = '';
-            document.getElementById('food-name').value = '';
-            document.getElementById('food-quantity').value = '';
-            document.getElementById('food-pasto').value = '';
-            document.getElementById('food-protein').value = '';
-            document.getElementById('food-carbs').value = '';
-        }
-
-        // window.switchToRegister = switchToRegister;
-        window.switchToLogin = switchToLogin;
-        window.loginUser = loginUser;
-        window.registerUser = registerUser;
-        window.logoutUser = logoutUser;
-        window.showTab = showTab;
-        window.loadSessionDay = loadSessionDay;
-        window.loadDietSessionDay = loadDietSessionDay;
-        window.resetSession = resetSession;
-        window.resetDietSession = resetDietSession;
-        window.addExercise = addExercise;
-        window.filterByDay = filterByDay;
-        window.addFood = addFood;
-        window.filterFoodByDay = filterFoodByDay;
-        window.removeExercise = removeExercise;
-        window.removeFood = removeFood;
-        window.completeOneSet = completeOneSet;
-        window.toggleDietCompletion = toggleDietCompletion;
         
+        // --- SESSION LOGIC ---
+        async function loadSessionDay(day) {
+            currentSessionDay = day;
+            $$('#session-day-filter .day-btn').forEach(b => b.classList.toggle('active', b.getAttribute('onclick') === `loadSessionDay('${day}')`));
+            sessionExercises = exercises.filter(ex => ex.day === day).sort((a, b) => a.order - b.order);
+            const sessionState = (await loadData('sessions')).find(s => s.day === day);
+            completedSets = sessionState?.completedSets || {};
+            renderSession();
+        }
+
+        function renderSession() {
+            updateSessionProgress();
+            $('#session-day-text').textContent = currentSessionDay ? `${getDayName(currentSessionDay)}` : 'Seleziona un giorno';
+            const container = $('#session-exercises');
+
+            if (!currentSessionDay) {
+                container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">👆</div><p>Seleziona un giorno per iniziare.</p></div>`;
+                return;
+            }
+             if (sessionExercises.length === 0) {
+                container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🎉</div><p>Giorno di riposo! Nessun esercizio programmato.</p></div>`;
+                return;
+            }
+            container.innerHTML = sessionExercises.map(ex => {
+                const setsDone = completedSets[ex.id] || 0;
+                const isCompleted = setsDone >= ex.sets;
+                let setsHTML = Array.from({ length: ex.sets }, (_, i) => `<div class="set-indicator ${i < setsDone ? 'completed' : ''}"></div>`).join('');
+                
+                return `
+                <div class="item session-item ${isCompleted ? 'completed' : ''}" onclick="completeOneSet('${ex.id}')">
+                    <div class="item-header">
+                        <div class="item-name">#${ex.order} ${ex.name}</div>
+                        <div class="exercise-status">${isCompleted ? 'Fatto!' : `${setsDone}/${ex.sets}`}</div>
+                    </div>
+                    <div class="item-details">${ex.sets} x ${ex.reps}</div>
+                    <div class="sets-progress">${setsHTML}</div>
+                </div>`;
+            }).join('');
+             $('#reset-session-btn').classList.toggle('hidden', Object.keys(completedSets).length === 0);
+        }
+
+        async function completeOneSet(id) {
+            triggerHapticFeedback();
+            const exercise = sessionExercises.find(ex => ex.id === id);
+            if (!exercise) return;
+            let current = completedSets[id] || 0;
+            completedSets[id] = (current + 1) > exercise.sets ? 0 : current + 1;
+            
+            const sessionDoc = (await loadData('sessions')).find(s => s.day === currentSessionDay);
+            if (sessionDoc) {
+                await updateDoc(doc(db, 'sessions', sessionDoc.id), { completedSets });
+            } else {
+                await addDoc(collection(db, 'sessions'), { userId: currentUser.uid, day: currentSessionDay, completedSets });
+            }
+            renderSession();
+        }
+
+        function updateSessionProgress() {
+            if (!currentSessionDay) return;
+            const total = sessionExercises.length;
+            const completed = sessionExercises.filter(ex => (completedSets[ex.id] || 0) >= ex.sets).length;
+            $('#session-progress-text').textContent = `${completed} / ${total} Esercizi Fatti`;
+            $('#session-progress-fill').style.width = total > 0 ? `${(completed/total)*100}%` : '0%';
+        }
+        
+        function resetSession() {
+             openModal('Conferma Reset', `
+                <p style="text-align:center; color:var(--label-secondary)">Azzerare i progressi di oggi?</p>
+                <div class="modal-actions">
+                    <button onclick="closeModal()" class="btn" style="background:var(--bg-tertiary)">Annulla</button>
+                    <button onclick="confirmResetSession()" class="btn btn-danger">Azzera</button>
+                </div>
+            `);
+        }
+        
+        async function confirmResetSession() {
+             completedSets = {};
+             const sessionDoc = (await loadData('sessions')).find(s => s.day === currentSessionDay);
+             if (sessionDoc) await updateDoc(doc(db, 'sessions', sessionDoc.id), { completedSets });
+             renderSession();
+             closeModal();
+             showToast('Sessione azzerata.');
+        }
+
+        // --- DIET SESSION LOGIC ---
+        async function loadDietSessionDay(day) {
+            currentDietSessionDay = day;
+            $$('#dietsession-day-filter .day-btn').forEach(b => b.classList.toggle('active', b.getAttribute('onclick') === `loadDietSessionDay('${day}')`));
+            sessionFood = foods.filter(f => f.day === day);
+            const dietSessionState = (await loadData('sessionsdiet')).find(s => s.day === day);
+            completedFoods = dietSessionState?.completedFoods || [];
+            renderDietSession();
+        }
+
+        function renderDietSession() {
+            updateDietProgress();
+            $('#dietsession-day-text').textContent = currentDietSessionDay ? `Dieta di ${getDayName(currentDietSessionDay)}` : 'Seleziona un giorno';
+            const container = $('#session-diet');
+
+            if (!currentDietSessionDay) {
+                container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">👆</div><p>Seleziona un giorno.</p></div>`; return;
+            }
+            if (sessionFood.length === 0) {
+                container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🍽️</div><p>Nessun alimento programmato.</p></div>`; return;
+            }
+
+            container.innerHTML = sessionFood.map(food => {
+                const isCompleted = completedFoods.includes(food.id);
+                return `
+                <div class="item session-item ${isCompleted ? 'completed' : ''}" onclick="toggleDietCompletion('${food.id}')">
+                    <div class="item-header">
+                        <div class="item-name">${food.name}</div>
+                        <div class="food-status">${isCompleted ? 'Fatto!' : 'Da mangiare'}</div>
+                    </div>
+                    <div class="item-details">${food.quantity}g • ${food.pasto}</div>
+                </div>`;
+            }).join('');
+            $('#reset-diet-session-btn').classList.toggle('hidden', completedFoods.length === 0);
+        }
+        
+        async function toggleDietCompletion(foodId) {
+            triggerHapticFeedback();
+            const index = completedFoods.indexOf(foodId);
+            if (index > -1) { completedFoods.splice(index, 1); } else { completedFoods.push(foodId); }
+            
+            const dietSessionDoc = (await loadData('sessionsdiet')).find(s => s.day === currentDietSessionDay);
+            if (dietSessionDoc) {
+                await updateDoc(doc(db, 'sessionsdiet', dietSessionDoc.id), { completedFoods });
+            } else {
+                await addDoc(collection(db, 'sessionsdiet'), { userId: currentUser.uid, day: currentDietSessionDay, completedFoods });
+            }
+            renderDietSession();
+        }
+
+        function updateDietProgress() {
+            if (!currentDietSessionDay) return;
+            const total = sessionFood.length;
+            const completed = completedFoods.length;
+            $('#diet-progress-text').textContent = `${completed} / ${total} Pasti Fatti`;
+            $('#diet-progress-fill').style.width = total > 0 ? `${(completed/total)*100}%` : '0%';
+        }
+        
+        function resetDietSession() {
+            openModal('Conferma Reset', `
+                <p style="text-align:center; color:var(--label-secondary)">Azzerare i progressi della dieta di oggi?</p>
+                <div class="modal-actions">
+                    <button onclick="closeModal()" class="btn" style="background:var(--bg-tertiary)">Annulla</button>
+                    <button onclick="confirmResetDietSession()" class="btn btn-danger">Azzera</button>
+                </div>
+            `);
+        }
+
+        async function confirmResetDietSession() {
+            completedFoods = [];
+            const dietSessionDoc = (await loadData('sessionsdiet')).find(s => s.day === currentDietSessionDay);
+            if (dietSessionDoc) await updateDoc(doc(db, 'sessionsdiet', dietSessionDoc.id), { completedFoods });
+            renderDietSession();
+            closeModal();
+            showToast('Dieta di oggi azzerata.');
+        }
+
+        // --- EVENT HANDLERS & INITIALIZATION ---
+        function showTab(tabName) {
+            $$('.tab-content').forEach(t => t.classList.remove('active'));
+            $$('.tab-btn').forEach(b => b.classList.remove('active'));
+            $('#' + tabName + '-tab').classList.add('active');
+            $(`.tab-btn[onclick="showTab('${tabName}')"]`).classList.add('active');
+        }
+
+        async function addExercise() {
+            const data = {
+                day: $('#exercise-day').value, name: $('#exercise-name').value,
+                sets: parseInt($('#exercise-sets').value), reps: $('#exercise-reps').value,
+                order: parseInt($('#exercise-order').value), userId: currentUser.uid
+            };
+            if (!data.day || !data.name || !data.sets || !data.reps || !data.order) return showToast('Compila tutti i campi.', 'error');
+            await addDoc(collection(db, 'exercises'), data);
+            showToast('Esercizio aggiunto!', 'success');
+            $('#exercise-name').value = $('#exercise-reps').value = '';
+            $('#exercise-order').value = parseInt(data.order) + 1;
+            $('#exercise-name').focus();
+            await loadExercises();
+        }
+
+        async function addFood() {
+             const data = {
+                day: $('#food-day').value, name: $('#food-name').value,
+                quantity: parseInt($('#food-quantity').value), pasto: $('#food-pasto').value,
+                protein: parseFloat($('#food-protein').value || 0), carbs: parseFloat($('#food-carbs').value || 0),
+                userId: currentUser.uid
+            };
+            if (!data.day || !data.name || !data.quantity || !data.pasto) return showToast('Compila Giorno, Nome, Quantità e Pasto.', 'error');
+            await addDoc(collection(db, 'foods'), data);
+            showToast('Alimento aggiunto!', 'success');
+             $('#food-name').value = $('#food-quantity').value = $('#food-protein').value = $('#food-carbs').value = '';
+             $('#food-name').focus();
+            await loadFoods();
+        }
+        
+        function filterByDay(day) {
+            currentDayFilter = day;
+            $$('#workout-day-filter .day-btn').forEach(b => b.classList.remove('active'));
+            $(`#workout-day-filter .day-btn[onclick="filterByDay('${day}')"]`).classList.add('active');
+            renderWorkouts();
+        }
+        function filterFoodByDay(day) {
+            currentFoodDayFilter = day;
+            $$('#food-day-filter .day-btn').forEach(b => b.classList.remove('active'));
+            $(`#food-day-filter .day-btn[onclick="filterFoodByDay('${day}')"]`).classList.add('active');
+            renderDiet();
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
-             console.log('🚀 FitTracker Initialized');
+            const dayOptionsHTML = generateDayOptions();
+            $('#exercise-day').innerHTML = dayOptionsHTML;
+            $('#food-day').innerHTML = dayOptionsHTML;
+
+            const dayFiltersHTML = ['all', 'lunedi', 'martedi', 'mercoledi', 'giovedi', 'venerdi', 'sabato', 'domenica'].map(day => 
+                `<button class="day-btn ${day==='all'?'active':''}" onclick="filterByDay('${day}')">${day==='all'?'Tutti':getDayName(day)}</button>`
+            ).join('');
+            $('#workout-day-filter').innerHTML = dayFiltersHTML;
+            
+             const foodDayFiltersHTML = ['all', 'lunedi', 'martedi', 'mercoledi', 'giovedi', 'venerdi', 'sabato', 'domenica'].map(day => 
+                `<button class="day-btn ${day==='all'?'active':''}" onclick="filterFoodByDay('${day}')">${day==='all'?'Tutti':getDayName(day)}</button>`
+            ).join('');
+             $('#food-day-filter').innerHTML = foodDayFiltersHTML;
+
+            const sessionDayFiltersHTML = ['lunedi', 'martedi', 'mercoledi', 'giovedi', 'venerdi', 'sabato', 'domenica'].map(day => 
+                `<button class="day-btn" onclick="loadSessionDay('${day}')">${getDayName(day)}</button>`
+            ).join('');
+            $('#session-day-filter').innerHTML = sessionDayFiltersHTML;
+            $('#dietsession-day-filter').innerHTML = sessionDayFiltersHTML.replaceAll('loadSessionDay', 'loadDietSessionDay');
         });
+
+        function generateDayOptions(selectedValue = '') {
+            const days = ['lunedi', 'martedi', 'mercoledi', 'giovedi', 'venerdi', 'sabato', 'domenica'];
+            return `<option value="">Seleziona Giorno</option>` + days.map(day => `<option value="${day}" ${day === selectedValue ? 'selected' : ''}>${getDayName(day)}</option>`).join('');
+        }
+
+        window.switchToRegister = switchToRegister; window.switchToLogin = switchToLogin;
+        window.loginUser = loginUser; window.registerUser = registerUser; window.logoutUser = logoutUser;
+        window.showTab = showTab; window.loadSessionDay = loadSessionDay; window.loadDietSessionDay = loadDietSessionDay;
+        window.addExercise = addExercise; window.filterByDay = filterByDay;
+        window.addFood = addFood; window.filterFoodByDay = filterFoodByDay;
+        window.completeOneSet = completeOneSet; window.resetSession = resetSession;
+        window.confirmResetSession = confirmResetSession;
+        window.toggleDietCompletion = toggleDietCompletion; window.resetDietSession = resetDietSession;
+        window.confirmResetDietSession = confirmResetDietSession;
+        window.closeModal = closeModal; window.editItem = editItem; window.updateItem = updateItem;
+        window.deleteItem = deleteItem; window.confirmDeleteItem = confirmDeleteItem;
 
     </script>
 </body>
